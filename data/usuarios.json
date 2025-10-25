@@ -30,5 +30,13 @@
         "localizacao": "Xique-xique",
         "reputacao": 0.0,
         "ofertas_ativas": 0
+    },
+    "5": {
+        "id": "5",
+        "nome": "Erick",
+        "tipo": "Gerador",
+        "localizacao": "Recife",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0
     }
 }

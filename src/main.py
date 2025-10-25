@@ -5,7 +5,6 @@ import json
 USUARIOS_FILE = "usuarios.json"  
 
 def obter_entrada_nao_vazia(mensagem: str) -> str:
-    """Obtém uma entrada do usuário que não pode ser vazia."""
     while True:
         valor = input(mensagem).strip()
         if valor:
