@@ -16,19 +16,14 @@ Este projeto visa prototipar um marketplace B2B inteligente focado na economia c
 
 /src 
 
-/ main.py 
-# Ponto de entrada (Menu e Interface) 
-/ modelos.py 
-# Definição das estruturas de dados (Usuário, Oferta) 
-/ persistencia.py 
-# Lógica de leitura e escrita em JSON
+/ main.py - Ponto de entrada (Menu e Interface) 
+/ modelos.py - Definição das estruturas de dados (Usuário, Oferta) 
+/ persistencia.py - Lógica de leitura e escrita em JSON
 
 / data
 
-/ ofertas.json 
-# Base de dados (simulada) de Ofertas 
-/ usuarios.json 
-# Base de dados (simulada) de Usuários
+/ ofertas.json - Base de dados (simulada) de Ofertas 
+/ usuarios.json - Base de dados (simulada) de Usuários
 
 ### 2. Inicialização
 
@@ -46,5 +41,7 @@ Ao executar o programa, você terá acesso ao menu inicial para testar as seguin
 | Funcionalidade | Módulo | Descrição |
 
 | **Cadastro de Usuário (C)** | `main.py` -> `cadastrar_usuario()` | Permite criar um novo Gerador ou Receptor e salva os dados no `usuarios.json`. |
+
 | **Listagem de Usuários (R)** | `main.py` -> `listar_usuarios()` | Exibe todos os usuários cadastrados (Geradores e Receptores). |
+
 | **Persistência de Dados** | `persistencia.py` | Garante que os dados sejam salvos e carregados corretamente entre as execuções do programa. |
