@@ -4,7 +4,7 @@ import json
 
 def cadastrar_usuario():
     print("\n--- CADASTRO DE NOVO USUÁRIO ---")
-    nome = input("Nome completo: ")
+    nome = input("Nome completo: ").capitalize().strip()
     
     while True:
         tipo = input("Tipo (Gerador ou Receptor): ").strip().capitalize()
@@ -12,7 +12,7 @@ def cadastrar_usuario():
             break
         print("Tipo inválido. Digite 'Gerador' ou 'Receptor'.")
 
-    cidade = input("Localização/Cidade: ").strip()
+    cidade = input("Localização/Cidade: ").strip().capitalize()
     
     novo = novo_usuario(nome, tipo, cidade)
     usuario_salvo = salvar_novo_usuario(novo)

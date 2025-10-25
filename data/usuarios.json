@@ -9,9 +9,17 @@
     },
     "2": {
         "id": "2",
-        "nome": "luis felix",
+        "nome": "Luis felix",
         "tipo": "Gerador",
-        "localizacao": "japao",
+        "localizacao": "Japao",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0
+    },
+    "3": {
+        "id": "3",
+        "nome": "Renato das bananas",
+        "tipo": "Receptor",
+        "localizacao": "Sao paulo",
         "reputacao": 0.0,
         "ofertas_ativas": 0
     }
