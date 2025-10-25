@@ -22,6 +22,7 @@ Este projeto visa prototipar um marketplace B2B inteligente focado na economia c
 
 / persistencia.py - Lógica de leitura e escrita em JSON
 
+
 / data
 
 / ofertas.json - Base de dados (simulada) de Ofertas 
