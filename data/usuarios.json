@@ -1,0 +1,10 @@
+{
+    "1": {
+        "id": "1",
+        "nome": "Henrique das Laranjas",
+        "tipo": "Gerador",
+        "localizacao": "Recife",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0
+    }
+}
