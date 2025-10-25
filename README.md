@@ -17,12 +17,15 @@ Este projeto visa prototipar um marketplace B2B inteligente focado na economia c
 /src 
 
 / main.py - Ponto de entrada (Menu e Interface) 
+
 / modelos.py - Definição das estruturas de dados (Usuário, Oferta) 
+
 / persistencia.py - Lógica de leitura e escrita em JSON
 
 / data
 
 / ofertas.json - Base de dados (simulada) de Ofertas 
+
 / usuarios.json - Base de dados (simulada) de Usuários
 
 ### 2. Inicialização
