@@ -48,7 +48,7 @@ def menu():
         elif escolha == '2':
             listar_usuarios()
         elif escolha == '3':
-            print("Saindo do sistema. Até a próxima Sprint!")
+            print("Saindo do sistema.")
             break
         else:
             print("Opção inválida. Tente novamente.")
