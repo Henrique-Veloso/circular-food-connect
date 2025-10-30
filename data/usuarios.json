@@ -1,0 +1,18 @@
+{
+    "1": {
+        "id": "1",
+        "nome": "Henrique",
+        "tipo": "Gerador",
+        "localizacao": "Recife",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0
+    },
+    "2": {
+        "id": "2",
+        "nome": "Erick",
+        "tipo": "Receptor",
+        "localizacao": "Recife",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0
+    }
+}

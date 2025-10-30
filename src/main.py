@@ -1,5 +1,7 @@
 from modelos import *
 from persistencia import *
+import time
+import datetime
 import json
 
 USUARIO_ATIVO = None
@@ -10,6 +12,21 @@ def obter_entrada_nao_vazia(mensagem: str) -> str:
         if valor:
             return valor
         print("🚫 Este campo não pode ficar vazio. Tente novamente.")
+
+def obter_entrada_numerica(mensagem: str, tipo=float):
+    while True:
+        try:
+            valor = input(mensagem).strip()
+            if not valor:
+                raise ValueError
+            
+            numero = tipo(valor)
+            if numero <= 0:
+                print("🚫 O valor deve ser positivo.")
+                continue
+            return numero
+        except ValueError:
+            print("🚫 Entrada inválida. Digite um número válido e positivo.")
 
 def cadastrar_usuario():
     print("\nCADASTRO DE NOVO USUÁRIO")
@@ -156,18 +173,117 @@ def comprar_oferta():
     listar_ofertas()
     
     dados_ofertas = load_data(OFERTAS_FILE)
-    if not any(o['status'] == 'Ativa' for o in dados_ofertas.values()):
+    
+    ofertas_ativas = {oid: oferta for oid, oferta in dados_ofertas.items() if oferta.get('status') == 'Ativa'}
+    if not ofertas_ativas:
+        print("🚫 Nenhuma oferta ativa para comprar no momento.")
         return 
 
     oferta_id = input("Digite o ID da oferta que deseja comprar: ").strip()
 
-    if oferta_id in dados_ofertas and dados_ofertas[oferta_id]['status'] == 'Ativa':
-        dados_ofertas[oferta_id]['status'] = 'Vendida'
-        dados_ofertas[oferta_id]['comprador_id'] = USUARIO_ATIVO['id']
+    if oferta_id in ofertas_ativas:
+        oferta = dados_ofertas[oferta_id]
+        try:
+            quantidade_disponivel = float(oferta['quantidade'])
+        except ValueError:
+            print("❌ Erro: Quantidade da oferta está em formato inválido.")
+            return
+
+        print(f"\nDisponível para compra: {quantidade_disponivel:.2f} Kg.")
+        quantidade_desejada = obter_entrada_numerica("Quantos Kg você deseja comprar? ", tipo=float)
+
+        if quantidade_desejada > quantidade_disponivel:
+            print(f"❌ Erro: Quantidade solicitada ({quantidade_desejada:.2f} Kg) excede o saldo disponível.")
+            return
+
+        nova_quantidade_disponivel = quantidade_disponivel - quantidade_desejada
+        
+        oferta['quantidade'] = str(nova_quantidade_disponivel) 
+        
+        if nova_quantidade_disponivel <= 0.01: 
+            oferta['status'] = 'Esgotada'
+            print("⚠️ Último lote comprado. A oferta foi marcada como 'Esgotada'.")
+            
+        if 'historico_compras' not in oferta:
+            oferta['historico_compras'] = []
+            
+        oferta['historico_compras'].append({
+            'comprador_id': USUARIO_ATIVO['id'],
+            'quantidade': quantidade_desejada,
+            'timestamp': int(time.time())
+        })
+
         save_data(dados_ofertas, OFERTAS_FILE)
-        print(f"\n✅ Parabéns! Você comprou a oferta '{dados_ofertas[oferta_id]['titulo']}'.")
+        
+        print(f"\n✅ Compra realizada com sucesso!")
+        print(f"   Quantidade Comprada: {quantidade_desejada:.2f} Kg")
+        print(f"   Quantidade Restante: {nova_quantidade_disponivel:.2f} Kg")
+        
     else:
         print("❌ ID da oferta inválido ou a oferta não está mais ativa.")
+
+def historico_transacoes():
+    global USUARIO_ATIVO
+    if USUARIO_ATIVO is None:
+        print("❌ Você precisa estar logado para ver o histórico.")
+        return
+
+    user_id = USUARIO_ATIVO['id']
+    user_tipo = USUARIO_ATIVO['tipo']
+
+    print(f"\nHISTÓRICO DE TRANSAÇÕES ({USUARIO_ATIVO['nome']})")
+
+    try:
+        dados_ofertas = load_data(OFERTAS_FILE)
+        dados_usuarios = load_data(USUARIOS_FILE)
+    except Exception as e:
+        print(f"❌ Erro ao carregar dados: {e}")
+        return
+
+    if user_tipo == 'Gerador':
+        print("\n[ITENS VENDIDOS POR VOCÊ]")
+        vendas_encontradas = False
+        
+        for oferta_id, oferta in dados_ofertas.items():
+            if oferta['gerador_id'] == user_id:
+                vendas_encontradas = True
+                
+                print(f"\nOferta ID {oferta_id}: {oferta['titulo']} (Saldo Atual: {oferta['quantidade']} Kg)")
+                
+                if 'historico_compras' in oferta and oferta['historico_compras']:
+                    print("  DETALHES DAS VENDAS:")
+                    for compra in oferta['historico_compras']:
+                        comprador = dados_usuarios.get(compra['comprador_id'], {'nome': 'Usuário Desconhecido'})
+                        
+                        data_hora = datetime.datetime.fromtimestamp(compra['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+                        
+                        print(f"    - Venda: {comprador['nome']} | Qtd: {compra['quantidade']:.2f} Kg | Data: {data_hora}")
+                else:
+                    print("  Nenhuma venda registrada nesta oferta ainda.")
+        
+        if not vendas_encontradas:
+            print("Nenhuma oferta registrada por você possui histórico de vendas.")
+
+    elif user_tipo == 'Receptor':
+        print("\n[ITENS COMPRADOS POR VOCÊ]")
+        compras_encontradas = False
+        
+        for oferta_id, oferta in dados_ofertas.items():
+            if 'historico_compras' in oferta and oferta['historico_compras']:
+                gerador = dados_usuarios.get(oferta['gerador_id'], {'nome': 'Gerador Desconhecido'})
+                
+                for compra in oferta['historico_compras']:
+                    if compra['comprador_id'] == user_id:
+                        compras_encontradas = True
+                        
+                        data_hora = datetime.datetime.fromtimestamp(compra['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+                        
+                        print(f"Compra na Oferta ID {oferta_id}")
+                        print(f"  > Título: {oferta['titulo']}")
+                        print(f"  > Gerador: {gerador['nome']} | Qtd Comprada: {compra['quantidade']:.2f} Kg | Data: {data_hora}")
+
+        if not compras_encontradas:
+            print("Nenhuma compra registrada ainda.")
 
 def menu():
     global USUARIO_ATIVO 
@@ -202,7 +318,8 @@ def menu():
             if USUARIO_ATIVO['tipo'] == 'Gerador':
                 print("1. Cadastrar Nova Oferta") 
                 print("2. Listar Ofertas Ativas")
-                print("3. Fazer Logout")
+                print("3. Visualizar Histórico de Vendas") 
+                print("4. Fazer Logout") 
                 
                 escolha = input("Escolha uma opção: ").strip()
 
@@ -210,7 +327,9 @@ def menu():
                     cadastrar_oferta()
                 elif escolha == '2':
                     listar_ofertas()
-                elif escolha == '3':
+                elif escolha == '3': 
+                    historico_transacoes()
+                elif escolha == '4':
                     USUARIO_ATIVO = None
                     print("✅ Logout realizado com sucesso.")
                 else:
@@ -219,13 +338,17 @@ def menu():
             elif USUARIO_ATIVO['tipo'] == 'Receptor':
                 print("1. Listar Ofertas Ativas")
                 print("2. Comprar Oferta")
-                print("3. Fazer Logout")
+                print("3. Visualizar Histórico de Compras") 
+                print("4. Fazer Logout") 
+                
                 escolha = input("Escolha uma opção: ").strip()
                 if escolha == '1':
                     listar_ofertas()
                 elif escolha == '2':
                     comprar_oferta()
-                elif escolha == '3':
+                elif escolha == '3': 
+                    historico_transacoes()
+                elif escolha == '4':
                     USUARIO_ATIVO = None
                     print("✅ Logout realizado com sucesso.")
             else: 
