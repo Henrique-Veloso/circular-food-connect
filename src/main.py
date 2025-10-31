@@ -355,36 +355,6 @@ def listar_minhas_ofertas_esgotadas():
         print(f"Quantidade: {oferta['quantidade']} Kg")
         print(f"Valor de venda: R$ {oferta['valor_de_venda']}/Kg")
 
-def minhas_ofertas():
-    global USUARIO_ATIVO
-    
-    if USUARIO_ATIVO is None or USUARIO_ATIVO['tipo'] != 'Gerador':
-        print("\nAcesso negado! Apenas Geradores podem acessar suas ofertas.")
-        return
-
-    while True:
-        print("\nGERENCIAMENTO DE OFERTAS")
-        print("1. Listar Ofertas Ativas")
-        print("2. Listar Ofertas Esgotadas")
-        print("3. Editar uma Oferta")
-        print("4. Excluir uma Oferta")
-        print("5. Voltar ao Menu Principal")
-        
-        opcao = input("\nEscolha uma opção: ").strip()
-        
-        if opcao == '1':
-            listar_minhas_ofertas_ativas()
-        elif opcao == '2':
-            listar_minhas_ofertas_esgotadas()
-        elif opcao == '3':
-            editar_oferta()
-        elif opcao == '4':
-            excluir_oferta()
-        elif opcao == '5':
-            break
-        else:
-            print("\nOpção inválida! Por favor, tente novamente.")
-
 def buscar_oferta():
     global USUARIO_ATIVO
     
