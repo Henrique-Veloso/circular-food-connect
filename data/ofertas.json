@@ -4,7 +4,7 @@
         "gerador_id": "1",
         "titulo": "Laranja",
         "descricao": "Casca de Laranja",
-        "quantidade": "50.0",
+        "quantidade": "100.0",
         "localizacao": "Recife",
         "laudo_link": null,
         "status": "Ativa",
@@ -15,6 +15,25 @@
                 "comprador_id": "2",
                 "quantidade": 50.0,
                 "timestamp": 1761833352
+            }
+        ]
+    },
+    "2": {
+        "id": "2",
+        "gerador_id": "1",
+        "titulo": "Borra de caf\u00e9",
+        "descricao": "Borras de caf\u00e9 coado",
+        "quantidade": "100.0",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "status": "Ativa",
+        "timestamp_cadastro": 1761932763,
+        "valor_de_venda": "20.0",
+        "historico_compras": [
+            {
+                "comprador_id": "2",
+                "quantidade": 100.0,
+                "timestamp": 1761932854
             }
         ]
     }
