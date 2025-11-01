@@ -11,7 +11,7 @@ def obter_entrada_nao_vazia(mensagem: str) -> str:
         valor = input(mensagem).strip()
         if valor:
             return valor
-        print("🚫 Este campo não pode ficar vazio. Tente novamente.")
+        print("❌ Este campo não pode ficar vazio. Tente novamente.")
 
 def obter_entrada_numerica(mensagem: str, tipo=float):
     while True:
@@ -22,11 +22,11 @@ def obter_entrada_numerica(mensagem: str, tipo=float):
             
             numero = tipo(valor)
             if numero <= 0:
-                print("🚫 O valor deve ser positivo.")
+                print("❌ O valor deve ser positivo.")
                 continue
             return numero
         except ValueError:
-            print("🚫 Entrada inválida. Digite um número válido e positivo.")
+            print("❌ Entrada inválida. Digite um número válido e positivo.")
 
 def cadastrar_usuario():
     print("\nCADASTRO DE NOVO USUÁRIO")
@@ -63,7 +63,7 @@ def listar_usuarios():
         return
 
     if not dados_usuarios:
-        print("🚫 Nenhum usuário cadastrado.")
+        print("❌ Nenhum usuário cadastrado.")
         return
 
     for usuario_id, usuario in dados_usuarios.items():
@@ -107,7 +107,7 @@ def simular_login():
                     print(f"✅ Login simulado com sucesso! Bem-vindo(a), {USUARIO_ATIVO['nome']}.")
                     break
             except (ValueError, IndexError):
-                print("🚫 Opção inválida. Tente novamente.")
+                print("❌ Opção inválida. Tente novamente.")
     else:
         print("❌ Erro: ID de usuário não encontrado.")
 
@@ -368,7 +368,7 @@ def buscar_oferta():
     ofertas_ativas = {oid: oferta for oid, oferta in dados_ofertas.items() if oferta.get('status') == 'Ativa'}
     
     if not ofertas_ativas:
-        print("🚫 Nenhuma oferta ativa no momento.")
+        print("❌ Nenhuma oferta ativa no momento.")
         return
     
     print("\nBUSCA DE OFERTAS")
@@ -468,7 +468,7 @@ def comprar_oferta():
     
     ofertas_ativas = {oid: oferta for oid, oferta in dados_ofertas.items() if oferta.get('status') == 'Ativa'}
     if not ofertas_ativas:
-        print("🚫 Nenhuma oferta ativa para comprar no momento.")
+        print("❌ Nenhuma oferta ativa para comprar no momento.")
         return 
 
     oferta_id = input("Digite o ID da oferta que deseja comprar: ").strip()
@@ -566,7 +566,7 @@ def menu():
             elif escolha.startswith('pyenv') or escolha == '':
                 continue
             else:
-                print("🚫 Opção inválida. Tente novamente.")
+                print("❌ Opção inválida. Tente novamente.")
         
         else: 
             print(f"\nLogado como: {USUARIO_ATIVO['nome']} ({USUARIO_ATIVO['tipo']})")
@@ -598,7 +598,7 @@ def menu():
                     USUARIO_ATIVO = None
                     print("✅ Logout realizado com sucesso.")
                 else:
-                    print("🚫 Opção inválida. Tente novamente.")
+                    print("❌ Opção inválida. Tente novamente.")
 
             elif USUARIO_ATIVO['tipo'] == 'Receptor':
                 print("1. Listar Ofertas Ativas")
