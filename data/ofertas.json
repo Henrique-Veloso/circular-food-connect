@@ -36,5 +36,29 @@
                 "timestamp": 1761932854
             }
         ]
+    },
+    "3": {
+        "id": "3",
+        "gerador_id": "3",
+        "titulo": "Laranja",
+        "descricao": "laranja ressecada",
+        "quantidade": "0.0",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "status": "Esgotada",
+        "timestamp_cadastro": 1762208440,
+        "valor_de_venda": "50.0",
+        "historico_compras": [
+            {
+                "comprador_id": "4",
+                "quantidade": 50.0,
+                "timestamp": 1762208490
+            },
+            {
+                "comprador_id": "4",
+                "quantidade": 30.0,
+                "timestamp": 1762208501
+            }
+        ]
     }
 }
