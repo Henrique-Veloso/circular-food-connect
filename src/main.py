@@ -29,18 +29,16 @@ def menu():
                 continue
             else:
                 print("❌ Opção inválida. Tente novamente.")
-        
         else: 
             print(f"\nLogado como: {USUARIO_ATIVO['nome']} ({USUARIO_ATIVO['tipo']})")
             
             if USUARIO_ATIVO['tipo'] == 'Gerador':
                 print("1. Cadastrar Nova Oferta") 
-                print("2. Listar Ofertas Ativas")
-                print("3. Listar Ofertas Esgotadas")
-                print("4. Editar uma Oferta")
-                print("5. Excluir uma Oferta")
-                print("6. Visualizar Histórico de Vendas") 
-                print("7. Fazer Logout") 
+                print("2. Listar Minhas Ofertas Ativas")
+                print("3. Editar uma Oferta")
+                print("4. Excluir uma Oferta")
+                print("5. Visualizar Histórico de Vendas") 
+                print("6. Fazer Logout") 
                 
                 escolha = input("Escolha uma opção: ").strip()
 
@@ -48,15 +46,13 @@ def menu():
                     cadastrar_oferta(USUARIO_ATIVO)
                 elif escolha == '2':
                     listar_minhas_ofertas_ativas(USUARIO_ATIVO)
-                elif escolha == '3':
-                    listar_minhas_ofertas_esgotadas(USUARIO_ATIVO)
-                elif escolha == '4':
+                elif escolha == '3': # Era 4
                     editar_oferta(USUARIO_ATIVO)
-                elif escolha == '5':
+                elif escolha == '4': # Era 5
                     excluir_oferta(USUARIO_ATIVO)
-                elif escolha == '6':
+                elif escolha == '5': # Era 6
                     historico_transacoes(USUARIO_ATIVO)
-                elif escolha == '7':
+                elif escolha == '6': # Era 7
                     USUARIO_ATIVO = None
                     print("✅ Logout realizado com sucesso.")
                 else:

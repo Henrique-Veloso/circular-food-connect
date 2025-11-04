@@ -17,7 +17,7 @@
     },
     "3": {
         "id": "3",
-        "nome": "Veloso",
+        "nome": "Teste",
         "tipo": "Gerador",
         "localizacao": "Recife",
         "reputacao": 0.0,
@@ -25,7 +25,7 @@
     },
     "4": {
         "id": "4",
-        "nome": "Antonio",
+        "nome": "Teste 2",
         "tipo": "Receptor",
         "localizacao": "Recife",
         "reputacao": 0.0,

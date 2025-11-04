@@ -138,9 +138,9 @@ def cadastrar_oferta(USUARIO_ATIVO):
         return
         
     print("\nCADASTRAR NOVA OFERTA DE RESÍDUO")
-    
-    titulo = input("Título da Oferta: ")
-    descricao = input("Descrição: ")
+
+    titulo = input("Título da Oferta: ").capitalize()
+    descricao = input("Descrição: ").capitalize()
     quantidade = input("Quantidade Kg: ")
     valor_de_venda = input("Valor de venda por Kg (R$): ")
     
@@ -190,7 +190,7 @@ def editar_oferta(USUARIO_ATIVO):
     dados_ofertas = load_data(OFERTAS_FILE)
     
     minhas_ofertas = {oid: oferta for oid, oferta in dados_ofertas.items() 
-    if oferta['gerador_id'] == USUARIO_ATIVO['id'] and (oferta['status'] == 'Ativa' or oferta['status'] == 'Esgotada')}
+    if oferta['gerador_id'] == USUARIO_ATIVO['id'] and oferta['status'] == 'Ativa'}
     
     if not minhas_ofertas:
         print("\nVocê não possui ofertas no momento!")
@@ -198,7 +198,7 @@ def editar_oferta(USUARIO_ATIVO):
     
     print("\nSUAS OFERTAS:")
     for oid, oferta in minhas_ofertas.items():
-        print(f"\nID: {oid}")
+        print(f"\nID: {oid} (Status: {oferta['status']})")
         print(f"Título: {oferta['titulo']}")
         print(f"Descrição: {oferta['descricao']}")
         print(f"Quantidade: {oferta['quantidade']} Kg")
@@ -250,24 +250,14 @@ def editar_oferta(USUARIO_ATIVO):
         except ValueError:
             print("❌ Por favor, digite um número válido.")
     
-    if oferta['status'] == 'Esgotada':
-        reativar = input("\nDeseja reativar esta oferta? (S/N): ").strip().upper()
-        if reativar == 'S':
-            while True:
-                nova_quantidade = input("Digite a nova quantidade disponível em Kg: ").strip()
-                try:
-                    quantidade = float(nova_quantidade)
-                    if quantidade > 0:
-                        oferta['quantidade'] = str(quantidade)
-                        oferta['status'] = 'Ativa'
-                        print("\n✅ Oferta reativada com sucesso!")
-                        break
-                    print("❌ A quantidade deve ser maior que zero.")
-                except ValueError:
-                    print("❌ Por favor, digite um número válido.")
-    
     save_data(dados_ofertas, OFERTAS_FILE)
     print("\n✅ Oferta atualizada com sucesso!")
+    if oferta['status'] == 'Removida' and float(oferta['quantidade']) > 0:
+        confirmar_reativacao = input("Esta oferta estava 'Removida' por esgotamento. Deseja reativá-la? (S/N): ").strip().upper()
+        if confirmar_reativacao == 'S':
+            oferta['status'] = 'Ativa'
+            save_data(dados_ofertas, OFERTAS_FILE)
+            print("✅ Oferta reativada com sucesso!")
 
 def excluir_oferta(USUARIO_ATIVO):
     if USUARIO_ATIVO is None or USUARIO_ATIVO['tipo'] != 'Gerador':
@@ -276,9 +266,9 @@ def excluir_oferta(USUARIO_ATIVO):
 
     dados_ofertas = load_data(OFERTAS_FILE)
 
-    minhas_ofertas = {oid: oferta for oid, oferta in dados_ofertas.items() 
-                     if oferta['gerador_id'] == USUARIO_ATIVO['id'] and 
-                     (oferta['status'] == 'Ativa' or oferta['status'] == 'Esgotada')}
+    minhas_ofertas = {oid: oferta for oid, oferta in dados_ofertas.items()
+                     if oferta['gerador_id'] == USUARIO_ATIVO['id'] and
+                     (oferta['status'] == 'Ativa' or oferta['status'] == 'Removida')}
     
     if not minhas_ofertas:
         print("\nVocê não possui ofertas no momento!")
@@ -291,6 +281,7 @@ def excluir_oferta(USUARIO_ATIVO):
         print(f"Descrição: {oferta['descricao']}")
         print(f"Quantidade: {oferta['quantidade']} Kg")
         print(f"Valor de Venda: R$ {oferta['valor_de_venda']}/Kg")
+        print(f"Status: {oferta['status']}")
         print("-" * 30)
     
     oferta_id = input("\nDigite o ID da oferta que deseja excluir: ").strip()
@@ -313,15 +304,18 @@ def excluir_oferta(USUARIO_ATIVO):
             print(f"  Quantidade: {compra['quantidade']:.2f} Kg")
             print(f"  Data: {data_hora}")
             print("-" * 30)
-            
-        print("\n⚠️ ATENÇÃO: Por ter histórico de compras, a oferta será marcada como 'Removida' e manterá o histórico.")
+
+        if oferta['status'] == 'Ativa':
+            print("\n⚠️ ATENÇÃO: Por ter histórico de compras, a oferta será marcada como 'Removida' e manterá o histórico.")
+        else: 
+            print("\n⚠️ ATENÇÃO: Esta oferta já está 'Removida' e possui histórico. Ela será excluída permanentemente.")
     
     confirmacao = input("\nTem certeza que deseja excluir esta oferta? (S/N): ").strip().upper()
     if confirmacao != 'S':
         print("Operação cancelada.")
         return
     
-    if 'historico_compras' in oferta and oferta['historico_compras']:
+    if oferta['status'] == 'Ativa' and 'historico_compras' in oferta and oferta['historico_compras']:
         oferta['status'] = 'Removida'
     else:
         del dados_ofertas[oferta_id]
@@ -340,24 +334,6 @@ def listar_minhas_ofertas_ativas(USUARIO_ATIVO):
         return
     
     print("\nSUAS OFERTAS ATIVAS:")
-    for oid, oferta in minhas_ofertas.items():
-        print(f"\nID: {oid}")
-        print(f"Título: {oferta['titulo']}")
-        print(f"Descrição: {oferta['descricao']}")
-        print(f"Quantidade: {oferta['quantidade']} Kg")
-        print(f"Valor de venda: R$ {oferta['valor_de_venda']}/Kg")
-
-def listar_minhas_ofertas_esgotadas(USUARIO_ATIVO):
-    dados_ofertas = load_data(OFERTAS_FILE)
-    minhas_ofertas = {oid: oferta for oid, oferta in dados_ofertas.items() 
-                     if oferta['gerador_id'] == USUARIO_ATIVO['id'] and 
-                     oferta['status'] == 'Esgotada'}
-    
-    if not minhas_ofertas:
-        print("\nVocê não possui ofertas esgotadas no momento!")
-        return
-    
-    print("\nSUAS OFERTAS ESGOTADAS:")
     for oid, oferta in minhas_ofertas.items():
         print(f"\nID: {oid}")
         print(f"Título: {oferta['titulo']}")
@@ -441,12 +417,6 @@ def comprar_oferta_especifica(oferta_id, USUARIO_ATIVO):
 
     nova_quantidade_disponivel = quantidade_disponivel - quantidade_desejada
     
-    oferta['quantidade'] = str(nova_quantidade_disponivel) 
-    
-    if nova_quantidade_disponivel <= 0.01: 
-        oferta['status'] = 'Esgotada'
-        print("⚠️ Último lote comprado. A oferta foi marcada como 'Esgotada'.")
-        
     if 'historico_compras' not in oferta:
         oferta['historico_compras'] = []
         
@@ -455,6 +425,17 @@ def comprar_oferta_especifica(oferta_id, USUARIO_ATIVO):
         'quantidade': quantidade_desejada,
         'timestamp': int(time.time())
     })
+    
+    if nova_quantidade_disponivel <= 0.01: 
+        oferta['status'] = 'Removida' 
+        oferta['quantidade'] = "0.00" 
+        save_data(dados_ofertas, OFERTAS_FILE)
+        print(f"\n✅ Compra realizada com sucesso!")
+        print(f"   Quantidade Comprada: {quantidade_desejada:.2f} Kg")
+        print("⚠️ Último lote comprado.")
+        return 
+    else:
+        oferta['quantidade'] = str(nova_quantidade_disponivel)
 
     save_data(dados_ofertas, OFERTAS_FILE)
     
