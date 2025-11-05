@@ -16,18 +16,14 @@ def requer_perfil(tipo: str):
         def decorated_function(*args, **kwargs):
             usuario = obter_usuario_logado()
             if not usuario or usuario.get('tipo') != tipo:
-                return redirect(url_for('login_page', erro="Acesso restrito."))
+                return redirect(url_for('index', erro="Acesso restrito."))
             return f(*args, **kwargs)
-        decorated_function.__name__ = f.__name__ 
+        decorated_function.__name__ = f.__name__
         return decorated_function
     return decorator
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
-
-@app.route('/login', methods=['GET'])
-def login_page(): 
     return render_template('loginUsuario.html')
 
 @app.route('/cadastro', methods=['GET'])
@@ -36,9 +32,8 @@ def cadastro_page():
 
 @app.route('/ofertas/listagem', methods=['GET'])
 def listagem_ofertas_page():
-    if not obter_usuario_logado():
-        return redirect(url_for('login_page'))
-    return render_template('listaDeProdutos.html', usuario=obter_usuario_logado())
+    usuario_logado = obter_usuario_logado() 
+    return render_template('listaDeProdutos.html', usuario=usuario_logado)
 
 @app.route('/ofertas/cadastro', methods=['GET'])
 @requer_perfil('Gerador')
@@ -48,7 +43,7 @@ def cadastro_oferta_page():
 @app.route('/historico', methods=['GET'])
 def historico_page():
     if not obter_usuario_logado():
-        return redirect(url_for('login_page'))
+        return redirect(url_for('index'))
     return render_template('historicoDeCompras.html', usuario=obter_usuario_logado())
 
 @app.route('/api/login', methods=['POST'])
@@ -57,35 +52,33 @@ def api_login():
     usuario = obter_usuario_por_credencial(credencial)
     if usuario:
         session['usuario_ativo'] = usuario
-        if usuario.get('tipo') == 'Gerador':
-            return redirect(url_for('listagem_ofertas_page')) 
-        elif usuario.get('tipo') == 'Receptor':
-            return redirect(url_for('listagem_ofertas_page')) 
-    return render_template('loginUsuario.html', erro="Credencial inválida. Tente novamente.")
+        return redirect(url_for('listagem_ofertas_page'))
+    else:
+        return render_template('loginUsuario.html', erro="Credencial inválida. Tente novamente.")
 
 @app.route('/api/logout', methods=['GET'])
 def api_logout():
     session.pop('usuario_ativo', None)
-    return redirect(url_for('login_page'))
+    return redirect(url_for('index'))
 
 @app.route('/api/cadastro_usuario', methods=['POST'])
 def api_cadastro_usuario():
     try:
         nome = request.form['nome']
         tipo = request.form['tipo']
-        cidade = request.form['cidade']
+        cidade = request.form['cidade'] 
         criar_usuario_servico(nome, tipo, cidade)
-        return redirect(url_for('login_page', sucesso="Cadastro realizado com sucesso!"))
+        return redirect(url_for('index', sucesso="Cadastro realizado com sucesso!"))
     except Exception as e:
         return render_template('cadastrarUsuario.html', erro=f"Erro no cadastro: {str(e)}")
 
 @app.route('/api/ofertas/ativas', methods=['GET'])
 def api_listar_ofertas():
-    ofertas = obter_todas_ofertas_ativas()
+    ofertas = obter_todas_ofertas_ativas()    
     return jsonify(ofertas)
 
 @app.route('/api/historico/<user_id>/<user_tipo>', methods=['GET'])
-def api_historico_transacoes(user_id, user_tipo):
+def api_historico_transacoes(user_id, user_tipo):    
     if not obter_usuario_logado() or obter_usuario_logado()['id'] != user_id:
         return jsonify({"erro": "Não autorizado"}), 403
     historico = obter_historico_transacoes(user_id, user_tipo)
