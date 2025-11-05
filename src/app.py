@@ -27,7 +27,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/login', methods=['GET'])
-def login_page():
+def login_page(): 
     return render_template('loginUsuario.html')
 
 @app.route('/cadastro', methods=['GET'])
