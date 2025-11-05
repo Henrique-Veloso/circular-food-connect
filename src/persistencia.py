@@ -11,10 +11,8 @@ def load_data(file_path):
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         data = {}
-
     if not isinstance(data, dict):
         return {}
-    
     return data
 
 def save_data(data, file_path):
@@ -29,26 +27,16 @@ def get_next_id(data_dict):
 def salvar_novo_usuario(novo_usuario):
     dados_usuarios = load_data(USUARIOS_FILE)
     novo_id = str(get_next_id(dados_usuarios))
-    novo_usuario['id'] = novo_id
-    
+    novo_usuario['id'] = novo_id 
     dados_usuarios[novo_id] = novo_usuario
     save_data(dados_usuarios, USUARIOS_FILE)
     return novo_usuario
 
 def salvar_nova_oferta(nova_oferta):
     dados_oferta = load_data(OFERTAS_FILE)
-
     novo_id = str(get_next_id(dados_oferta))
     nova_oferta['id'] = novo_id
     nova_oferta['timestamp_cadastro'] = int(time.time())
-
     dados_oferta[novo_id] = nova_oferta
     save_data(dados_oferta, OFERTAS_FILE)
     return nova_oferta
-
-
-
-
-
-    
-    
