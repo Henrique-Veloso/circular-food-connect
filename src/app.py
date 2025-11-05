@@ -24,7 +24,7 @@ def requer_perfil(tipo: str):
 
 @app.route('/')
 def index():
-    return redirect(url_for('login_page'))
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET'])
 def login_page():
