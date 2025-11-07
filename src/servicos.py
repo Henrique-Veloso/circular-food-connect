@@ -7,20 +7,35 @@ def obter_todos_usuarios():
     dados_usuarios = load_data(USUARIOS_FILE)
     return list(dados_usuarios.values())
 
-def obter_usuario_por_credencial(input_busca):
+def autenticar_usuario(email, senha):
     dados_usuarios = load_data(USUARIOS_FILE)
-    usuarios_encontrados = []
     for usuario in dados_usuarios.values():
-        if input_busca == usuario['id'] or input_busca.lower() in usuario['nome'].lower():
-            usuarios_encontrados.append(usuario)           
-    if len(usuarios_encontrados) == 1:
-        return usuarios_encontrados[0]        
+        if usuario.get('email', '') == email and usuario.get('senha', '') == senha:
+            usuario_limpo = usuario.copy()
+            usuario_limpo.pop('senha', None) 
+            return usuario_limpo
     return None
 
-def criar_usuario_servico(nome, tipo, cidade):
+def obter_usuario_por_email(email):
+    dados_usuarios = load_data(USUARIOS_FILE)
+    for usuario in dados_usuarios.values():
+        if usuario.get('email', '') == email:
+            return usuario
+    return None
+
+def obter_usuario_por_credencial(input_busca):
+    dados_usuarios = load_data(USUARIOS_FILE)
+    for usuario in dados_usuarios.values():
+        if input_busca == usuario.get('id') or input_busca.lower() == usuario.get('nome', '').lower():
+            return usuario
+    return None
+
+def criar_usuario_servico(nome, tipo, cidade, email, senha):
     if tipo not in ['Gerador', 'Receptor']:
-        raise ValueError("Tipo de usuário inválido.")    
-    novo = novo_usuario(nome, tipo, cidade)
+        raise ValueError("Tipo de usuário inválido.")
+    if obter_usuario_por_email(email):
+        raise ValueError("Este E-mail já está cadastrado.")
+    novo = novo_usuario(nome, tipo, cidade, email, senha)
     return salvar_novo_usuario(novo)
 
 def obter_todas_ofertas_ativas():
@@ -35,6 +50,11 @@ def obter_oferta_por_id(oferta_id):
 def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade):
     if not all([titulo, descricao, quantidade, valor_de_venda]):
         raise ValueError("Campos obrigatórios faltando.")
+    try:
+        float(quantidade)
+        float(valor_de_venda)
+    except ValueError:
+        raise ValueError("Quantidade e Valor devem ser números válidos.")
     nova = nova_oferta(
         gerador_id=gerador_id,
         titulo=titulo,
@@ -59,7 +79,7 @@ def editar_oferta_servico(oferta_id, gerador_id, novos_dados):
             if nova_quantidade > 0:
                 oferta['quantidade'] = str(nova_quantidade)
         except ValueError:
-            pass 
+            pass
     nova_valor_str = novos_dados.get('valor_de_venda')
     if nova_valor_str:
         try:
@@ -67,7 +87,7 @@ def editar_oferta_servico(oferta_id, gerador_id, novos_dados):
             if novo_valor >= 0:
                 oferta['valor_de_venda'] = str(novo_valor)
         except ValueError:
-            pass 
+            pass
     if oferta['status'] == 'Removida' and float(oferta['quantidade']) > 0:
         oferta['status'] = 'Ativa'
     save_data(dados_ofertas, OFERTAS_FILE)
@@ -86,7 +106,7 @@ def deletar_oferta_servico(oferta_id, gerador_id):
         del dados_ofertas[oferta_id]
         save_data(dados_ofertas, OFERTAS_FILE)
         return True, "Oferta excluída permanentemente."
-
+    
 def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
     dados_ofertas = load_data(OFERTAS_FILE)
     oferta = dados_ofertas.get(oferta_id)
@@ -106,9 +126,9 @@ def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
         'quantidade': quantidade_desejada,
         'timestamp': int(time.time())
     })
-    if nova_quantidade_disponivel <= 0.01: 
-        oferta['status'] = 'Removida' 
-        oferta['quantidade'] = "0.00" 
+    if nova_quantidade_disponivel <= 0.01:
+        oferta['status'] = 'Removida'
+        oferta['quantidade'] = "0.00"
     else:
         oferta['quantidade'] = str(nova_quantidade_disponivel)
     save_data(dados_ofertas, OFERTAS_FILE)
@@ -124,7 +144,7 @@ def obter_historico_transacoes(user_id, user_tipo):
     historico = []
     for oferta_id, oferta in dados_ofertas.items():
         if 'historico_compras' in oferta and oferta['historico_compras']:
-            gerador = dados_usuarios.get(oferta['gerador_id'], {'nome': 'Gerador Desconhecido'})          
+            gerador = dados_usuarios.get(oferta['gerador_id'], {'nome': 'Gerador Desconhecido'})
             for compra in oferta['historico_compras']:
                 comprador = dados_usuarios.get(compra['comprador_id'], {'nome': 'Comprador Desconhecido'})
                 data_hora = datetime.datetime.fromtimestamp(compra['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
@@ -142,4 +162,4 @@ def obter_historico_transacoes(user_id, user_tipo):
                     transacao['parceiro'] = gerador['nome']
                     transacao['tipo'] = 'Compra'
                     historico.append(transacao)
-        return historico
+    return historico

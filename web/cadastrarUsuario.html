@@ -4,46 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Circular Food Conect</title>
-    
-    <!-- Carrega o Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Carrega a fonte Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* Define a fonte Inter como padrão */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
     </style>
 </head>
 <body class="h-full bg-gray-100">
-
-    <!-- Cabeçalho com logo e linha divisória -->
-    <header class="w-full bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto p-4">
             <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
-                
-                <!-- Imagem do logo (Carregada via Flask) -->
-                <img src="./img/logo.png" alt="Logo Circular Food Conect" class="h-10 w-auto">
-                
-                <!-- Nome da empresa -->
+                <img src="/static/img/logo.png" alt="Logo" class="h-10 w-auto">
                 <span class="text-2xl font-bold text-gray-800">
                     <span class="text-orange-500">Circular Food</span> <span class="text-green-600">Conect</span>
                 </span>
             </a>
         </div>
     </header>
-
     <div class="flex flex-col items-center justify-center min-h-full w-full p-4">
-        
-        <!-- Caixa de Cadastro -->
         <div class="max-w-sm w-full bg-white rounded-2xl shadow-xl p-8 space-y-8 mt-16 mb-16">
-            
-            <!-- Cabeçalho -->
             <div class="text-center">
                 <h2 class="text-2xl tracking-tight text-gray-900">
                     Crie sua conta
@@ -52,13 +31,7 @@
                     Rápido e fácil, vamos começar!
                 </p>
             </div>
-
-            <!-- Bloco de Mensagens de Erro (Removido) -->
-
-            <!-- Formulário de Cadastro -->
             <form class="space-y-6" action="{{ url_for('api_cadastro_usuario') }}" method="POST">
-                
-                <!-- Campo Nome -->
                 <div>
                     <label for="nome" class="block text-sm font-medium text-gray-700">
                         Seu nome completo
@@ -70,8 +43,6 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
-
-                <!-- Campo E-mail (Novo) -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">
                         E-mail
@@ -83,8 +54,6 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
-
-                <!-- Campo Senha (Novo) -->
                 <div>
                     <label for="senha" class="block text-sm font-medium text-gray-700">
                         Senha
@@ -96,8 +65,6 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
-
-                <!-- Campo Cidade -->
                 <div>
                     <label for="cidade" class="block text-sm font-medium text-gray-700">
                         Cidade
@@ -109,8 +76,6 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
-
-                <!-- Campo Tipo de Usuário -->
                 <div>
                     <label for="tipo" class="block text-sm font-medium text-gray-700">
                         Eu sou
@@ -125,8 +90,6 @@
                         </select>
                     </div>
                 </div>
-
-                <!-- Botão Cadastrar -->
                 <div>
                     <button type="submit"
                             class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
@@ -136,8 +99,6 @@
                     </button>
                 </div>
             </form>
-
-            <!-- Link de Login -->
             <div class="space-y-4 text-center text-sm">
                 <p class="text-gray-600">
                     Já tem uma conta?
@@ -146,10 +107,7 @@
                     </a>
                 </p>
             </div>
-
         </div>
-
-        <!-- Footer Legal -->
         <footer class="mt-10 mb-10 text-center text-xs text-gray-500 max-w-sm">
             Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
             <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect

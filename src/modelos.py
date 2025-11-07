@@ -1,22 +1,22 @@
-def novo_usuario(nome, tipo, cidade):
+def novo_usuario(nome, tipo, cidade, email, senha):
     return {
-        'id': None,  
         'nome': nome,
-        'tipo': tipo, 
+        'email': email,
+        'senha': senha,
+        'tipo': tipo,
         'localizacao': cidade,
-        'reputacao': 0.0, 
+        'reputacao': 0.0,
         'ofertas_ativas': 0
     }
 
 def nova_oferta(gerador_id, titulo, descricao, quantidade, cidade):
     return {
-        'id': None,  
         'gerador_id': gerador_id,
         'titulo': titulo,
         'descricao': descricao,
-        'quantidade': quantidade, 
+        'quantidade': quantidade,
         'localizacao': cidade,
-        'laudo_link': None, 
-        'status': 'Ativa', 
+        'laudo_link': None,
+        'status': 'Ativa',
         'timestamp_cadastro': None
     }

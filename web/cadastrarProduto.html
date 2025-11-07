@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunciar Produto - Circular Food Conect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+        <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                <img src="/static/img/logo.png" alt="Logo" class="h-10 w-auto">
+                <span class="text-2xl font-bold text-gray-800">
+                    <span class="text-orange-500">Circular Food</span> <span class="text-green-600">Conect</span>
+                </span>
+            </a>
+            <nav class="flex items-center space-x-4">
+                <a href="{{ url_for('listagem_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Ofertas Ativas</a>
+                {% if usuario %}
+                    <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
+                    <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
+                        + Anunciar
+                    </a>
+                    <a href="{{ url_for('api_logout') }}" class="text-sm font-medium text-red-600 hover:text-red-700">Sair ({{ usuario.nome }})</a>
+                {% else %}
+                    <a href="{{ url_for('login_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Entrar</a>
+                    <a href="{{ url_for('cadastro_page') }}" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 shadow-md transition-colors duration-200">
+                        Cadastre-se
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <div class="flex flex-col items-center justify-center w-full p-4 flex-grow">
+        <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl p-8 space-y-6 my-16">
+            <div class="text-center">
+                <h2 class="text-2xl tracking-tight text-gray-900">
+                    Anunciar Nova Matéria-Prima
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Preencha os dados da sua oferta para conectar-se aos receptores.
+                </p>
+            </div>
+            <form class="space-y-6" action="{{ url_for('api_cadastro_oferta') }}" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="titulo" class="block text-sm font-medium text-gray-700">Título da Oferta *</label>
+                    <div class="mt-1">
+                        <input id="titulo" name="titulo" type="text" required
+                               placeholder="Ex: Casca de Banana Seca (Máx. 60 caracteres)" maxlength="60"
+                               class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                                      focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição Completa *</label>
+                    <div class="mt-1">
+                        <textarea id="descricao" name="descricao" rows="4" required
+                                  placeholder="Detalhe o estado do material, potencial de uso, e condições de coleta."
+                                  class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                                         focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"></textarea>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label for="quantidade" class="block text-sm font-medium text-gray-700">Quantidade Disponível (em Kg) *</label>
+                        <div class="mt-1">
+                            <input id="quantidade" name="quantidade" type="number" step="0.01" min="0.01" required
+                                   placeholder="Ex: 50.00"
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                                          focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="valor_de_venda" class="block text-sm font-medium text-gray-700">Preço por Kg (R$) *</label>
+                        <div class="mt-1">
+                            <input id="valor_de_venda" name="valor_de_venda" type="number" step="0.01" min="0.00" required
+                                   placeholder="Ex: 0.50"
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                                          focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="cidade" class="block text-sm font-medium text-gray-700">Localização (Cidade) *</label>
+                    <div class="mt-1">
+                        <input id="cidade" name="cidade" type="text" required
+                               placeholder="Ex: Recife" value="{{ usuario.localizacao if usuario else '' }}"
+                               class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                                      focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-gray-200 space-y-4">
+                    <label class="text-sm font-medium text-gray-700 mb-1 block">Fotos do Produto (Opcional)</label>
+                    <p class="text-sm text-gray-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2 text-green-600"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-4 3 3 5-5V15z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Arraste ou clique para selecionar fotos (máx. 6).
+                    </p>  
+                    <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 cursor-pointer hover:border-green-500 hover:text-green-600 transition-colors duration-200 file-input-wrapper">
+                        Clique ou arraste fotos aqui
+                        <input type="file" name="fotos" multiple accept="image/*">
+                    </div>
+                </div> 
+                <div class="pt-4 border-t border-gray-200">
+                    <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
+                                   bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                                   focus:ring-orange-400 transition-colors duration-200">
+                        Publicar Oferta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="mt-auto mb-10 text-center text-xs text-gray-500">
+        Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
+        <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect
+        e seus parceiros.
+    </footer>
+</body>
+</html>

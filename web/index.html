@@ -1,371 +1,83 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CFC</title>
-    <!-- Carrega o Tailwind CSS -->
+    <title>Página Inicial - Circular Food Conect</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos customizados adicionais */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f5; /* Um cinza claro para o fundo, similar ao da imagem */
-        }
-        
-        /* Ajuste para os ícones no header */
-        .header-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Corrigido de 'align: items-center' */
-            font-size: 0.75rem; /* 12px */
-            color: #4a4a4a;
-        }
-        .header-icon svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-        }
-        .logo img {
-            height: 50px; /* Ajuste para ficar parecido com o da imagem */
-        }
-
-        /* Setas do carrossel de produtos */
-        .scroll-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            cursor: pointer;
-            z-index: 10;
-        }
-        .scroll-arrow:hover {
-            background-color: #f0f0f0;
-        }
-        .scroll-arrow.left {
-            left: -20px;
-        }
-        .scroll-arrow.right {
-            right: -20px;
-        }
-        
-        /* Ocultar a barra de rolagem do carrossel */
-        .product-carousel::-webkit-scrollbar {
-            display: none;
-        }
-        .product-carousel {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
     </style>
 </head>
-<body class="bg-gray-100">
-
-    <!-- HEADER -->
-    <header class="bg-white shadow-md p-4 sticky top-0 z-50">
-        <div class="container mx-auto">
-            <!-- Linha Superior do Header -->
-            <div class="flex items-center justify-between space-x-4">
-                
-                <!-- Logo -->
-                <div class="logo">
-                    <!-- 
-                      ****************************************************
-                      * AQUI ESTÁ A TAG DA LOGO PARA VOCÊ MUDAR!          *
-                      * Troque "./logo.png" pelo caminho da sua imagem. *
-                      ****************************************************
-                    -->
-                    <img src="./img/logo.png" alt="Logo Circular Food Conect" class="h-10 w-auto">
-                </div>
-
-                <!-- Barra de Busca -->
-                <div class="flex-grow flex items-center border border-gray-300 rounded-md overflow-hidden max-w-xl">
-                    <span class="pl-3 text-gray-500">
-                        <!-- Ícone de Lupa (SVG) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </span>
-                    <input type="search" placeholder="Buscar 'Apartamento'" class="p-3 w-full focus:outline-none">
-                    <button class="bg-gray-100 p-3 h-full border-l border-gray-300">
-                        <span class="text-gray-600 font-semibold text-sm flex items-center">
-                            <!-- Ícone de Localização (SVG) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            PE
-                            <!-- Ícone de Chevron (SVG) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-
-                <!-- Links da Direita -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#" class="header-icon">
-                        <!-- Ícone Plano Profissional (SVG) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <span>Plano Profissional</span>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+        <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                <img src="/static/img/logo.png" alt="Logo" class="h-10 w-auto">
+                <span class="text-2xl font-bold text-gray-800">
+                    <span class="text-orange-500">Circular Food</span> <span class="text-green-600">Conect</span>
+                </span>
+            </a>
+            <nav class="flex items-center space-x-4">
+                <a href="{{ url_for('listagem_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Ofertas Ativas</a>
+                {% if usuario %}
+                    <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
+                    {% if usuario.tipo == 'Gerador' %}
+                        <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
+                            + Anunciar
+                        </a>
+                    {% endif %}
+                    <a href="{{ url_for('api_logout') }}" class="text-sm font-medium text-red-600 hover:text-red-700">Sair ({{ usuario.nome }})</a>
+                {% else %}
+                    <a href="{{ url_for('login_page') }}" class="text-sm font-medium text-green-600 hover:text-green-500">Entrar</a>
+                    <a href="{{ url_for('cadastro_page') }}" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 shadow-md transition-colors duration-200">
+                        Cadastre-se
                     </a>
-                    <a href="#" class="header-icon">
-                        <!-- Ícone Meus Anúncios (SVG) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>Meus Anúncios</span>
-                    </a>
-                    <a href="#" class="header-icon">
-                        <!-- Ícone Chat (SVG) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                        <span>Chat</span>
-                    </a>
-                    <a href="#" class="header-icon">
-                        <!-- Ícone Notificações (SVG) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <span>Notificações</span>
-                    </a>
-                </div>
-
-                <!-- Botões -->
-                <div class="flex items-center space-x-3">
-                    <button class="font-semibold text-green-700 px-4 py-2 rounded-full hover:bg-green-100">
-                        Entrar
-                    </button>
-                    <button class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-full hover:bg-orange-600 shadow-lg">
-                        Anunciar grátis
-                    </button>
-                </div>
-            </div>
+                {% endif %}
+            </nav>
         </div>
     </header>
-
-    <!-- BARRA DE NAVEGAÇÃO DE CATEGORIAS -->
-    <nav class="bg-white shadow-sm py-2">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between overflow-x-auto">
-                <!-- Categorias -->
-                <div class="flex space-x-2">
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Dummy Índice</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Cupons</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Autos</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Esportes</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Autopeças</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Celulares</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Imóveis</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Decoração</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Eletro</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Móveis</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Hobbies</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Agro</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Moda</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100">
-                        <span class="text-sm font-semibold">Infantil</span>
-                    </a>
-                </div>
-                 <a href="#" class="flex items-center space-x-1 p-2 rounded-md bg-gray-100 hover:bg-gray-200 ml-4">
-                    <span class="text-sm font-semibold">Categorias</span>
+    <main class="flex-grow container mx-auto p-4 mt-16">
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-8 text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+                <span class="text-green-600">Conecte-se</span> ao futuro alimentar circular.
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Na Circular Food Conect, transformamos o excedente de alimentos e coprodutos em novas matérias-primas, de forma rápida, segura e sustentável.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6 pt-4">
+                <a href="{{ url_for('listagem_ofertas_page') }}" class="w-full md:w-auto flex justify-center py-3 px-8 border border-transparent rounded-lg shadow-md text-base font-medium text-white 
+                   bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    Ver Ofertas Ativas
                 </a>
+                {% if not usuario %}
+                <a href="{{ url_for('cadastro_page') }}" class="w-full md:w-auto flex justify-center py-3 px-8 border border-green-600 rounded-lg shadow-md text-base font-medium text-green-600 
+                   bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    Quero me Cadastrar
+                </a>
+                {% endif %}
+            </div>
+            <div class="pt-8 border-t border-gray-100 grid grid-cols-3 gap-4">
+                <div>
+                    <p class="text-4xl font-bold text-orange-500">10T+</p>
+                    <p class="text-sm text-gray-500">Resíduos Reaproveitados</p>
+                </div>
+                <div>
+                    <p class="text-4xl font-bold text-green-600">40+</p>
+                    <p class="text-sm text-gray-500">Parceiros Conectados</p>
+                </div>
+                <div>
+                    <p class="text-4xl font-bold text-orange-500">100%</p>
+                    <p class="text-sm text-gray-500">Impacto Sustentável</p>
+                </div>
             </div>
         </div>
-    </nav>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="container mx-auto p-4 mt-6">
-
-        <!-- BANNER BLACK FRIDAY (Placeholder) -->
-        <section class="mb-8">
-            <div class="bg-gradient-to-r from-green-600 to-green-900 rounded-lg p-8 md:p-12 text-white flex items-center justify-between min-h-[250px] relative overflow-hidden">
-                <!-- Conteúdo do Banner -->
-                <div class="z-10">
-                    <h2 class="text-3xl md:text-5xl font-bold mb-2">PREPARE-SE PARA A</h2>
-                    <h1 class="text-5xl md:text-8xl font-extrabold mb-4">GREEN FRIDAY</h1>
-                </div>
-                <div class="z-10 text-right">
-                    <h2 class="text-2xl md:text-4xl font-bold">Crie 3 anúncios</h2>
-                    <h2 class="text-2xl md:text-4xl font-bold mb-4">Ganhe <span class="text-orange-400">3 Destaques</span></h2>
-                    <button class="bg-white text-green-700 font-bold px-8 py-3 rounded-full text-lg hover:bg-gray-100">
-                        Anuncie agora
-                    </button>
-                    <p class="text-xs mt-2">*Consulte e regulamento</p>
-                </div>
-                
-                <!-- Imagens de placeholder (abstrato) -->
-                <div class="absolute inset-0 flex items-center justify-center opacity-10 z-0">
-                     <span class="text-9xl font-black text-white">CFC</span>
-                </div>
-                <!-- Na imagem real, haveria um iPhone e um controle de PS5. 
-                     Usaremos placeholders de texto para simular. -->
-                <div class="absolute left-1/3 top-0 transform -translate-x-1/2 opacity-20 z-0 hidden md:block">
-                    <span class="text-9xl font-bold">[iPhone]</span>
-                </div>
-                <div class="absolute right-1/3 top-0 transform translate-x-1/2 opacity-20 z-0 hidden md:block">
-                    <span class="text-9xl font-bold">[PS5]</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO DE PRODUTOS -->
-        <section>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Mais procurados em Ar-condicionados</h2>
-            
-            <div class="relative">
-                <!-- Botão Esquerda -->
-                <button id="scroll-left" class="scroll-arrow left hidden md:flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-
-                <!-- Carrossel de Produtos -->
-                <div id="product-carousel" class="product-carousel flex overflow-x-auto space-x-4 pb-4">
-
-                    <!-- Card de Produto 1 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Vende-se ar condicionado]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Vende-se ar condicionado completo split 12000 BTUS...</p>
-                            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Garantia da CFC</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 250</p>
-                        </div>
-                    </div>
-
-                    <!-- Card de Produto 2 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar condicionado de 12 mil]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Ar condicionado de 12 mil btus invert serpentina de cobr...</p>
-                            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Garantia da CF</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 1.200</p>
-                        </div>
-                    </div>
-
-                    <!-- Card de Produto 3 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar-condicionado de janela]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Ar-condicionado de janela 21000btus</p>
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Entrega Fácil</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 1.100</p>
-                        </div>
-                    </div>
-
-                    <!-- Card de Produto 4 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar condicionado portátil]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Ar condicionado portátil pil 13</p>
-                            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Garantia da CFC</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 1.300</p>
-                        </div>
-                    </div>
-
-                    <!-- Card de Produto 5 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar condicionado]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Ar condicionado</p>
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Entrega Fácil</span>
-                            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Garantia da CFC</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 1.000</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Card de Produto 6 -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar condicionado split]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Ar condicionado split já instalado</p>
-                            <p class="text-xl font-bold text-gray-900">R$ 1.200</p>
-                        </div>
-                    </div>
-
-                    <!-- Card de Produto 7 (extra) -->
-                    <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="https://placehold.co/300x200/eee/ccc?text=Ar-condicionado" alt="[Imagem de Ar condicionado extra]" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <p class="text-sm text-gray-700 mb-2 truncate">Split Springer 9000 Btus</p>
-                             <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Garantia da CFC</span>
-                            <p class="text-xl font-bold text-gray-900">R$ 800</p>
-                        </div>
-                    </div>
-
-                </div>
-                
-                <!-- Botão Direita -->
-                <button id="scroll-right" class="scroll-arrow right hidden md:flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
-
-        </section>
-
     </main>
-    
-    <!-- JavaScript para o Carrossel -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const carousel = document.getElementById('product-carousel');
-            const scrollLeftButton = document.getElementById('scroll-left');
-            const scrollRightButton = document.getElementById('scroll-right');
-
-            if (carousel && scrollLeftButton && scrollRightButton) {
-                // Quantidade de scroll por clique
-                const scrollAmount = 300; 
-
-                scrollLeftButton.addEventListener('click', () => {
-                    carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                });
-
-                scrollRightButton.addEventListener('click', () => {
-                    carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                });
-            }
-        });
-    </script>
-
+    <footer class="mt-10 mb-10 text-center text-xs text-gray-500">
+        Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
+        <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect
+        e seus parceiros.
+    </footer>
 </body>
 </html>

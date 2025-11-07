@@ -2,11 +2,13 @@
 
 Repositório do protótipo **Circular Food Connect**!
 
-Este projeto evoluiu do console para uma aplicação web, utilizando **Flask** como framework de backend. Nosso principal diferencial é o uso de lógica de otimização (IA) para conectar geradores de resíduos a receptores de matéria-prima.
+Este projeto é uma aplicação web construída com **Flask** para simular uma plataforma de economia circular. Seu principal diferencial é a lógica de otimização (IA) em segundo plano, que conecta Geradores de excedentes a Receptores de matéria-prima, promovendo a sustentabilidade alimentar.
 
-**Status Atual:** **Início da Sprint 3 (Flask Core e Interface Gráfica)**. O backend de CRUD está refatorado em Serviços (sem `input()`/`print()`).
+**Status Atual:** **Sprint 3: Refatoração de Lógica e Padrão de Excelência Visual Concluído.**
 
----
+## ✨ Padrão de Excelência Visual (Front-end)
+
+Todas as páginas (`index.html`, `loginUsuario.html`, `cadastrarUsuario.html`, `listaDeProdutos.html`, `comprarProduto.html`, `historicoDeCompras.html`) foram padronizadas para uma **estética clean e consistente**, utilizando a fonte Inter e o esquema de cores Verde (`Green-600`) para ações primárias/conexão e Laranja (`Orange-500`) para destaques e botões de alta conversão. O caminho da logo foi corrigido para `/static/img/logo.png`.
 
 ## 🚀 Como Executar o Protótipo Web
 
@@ -16,28 +18,30 @@ Este projeto evoluiu do console para uma aplicação web, utilizando **Flask** c
 2.  **Ambiente Virtual (`venv`)** ativado.
 3.  **Flask** instalado: `pip install Flask`
 
-### 1. Estrutura do Projeto
+### Inicialização do Servidor (Instrução Corrigida!)
 
-/projetocfc ├── /src # Camada de Backend (Servidor Flask e Lógica) │ ├── app.py # Servidor Flask e Rotas (O novo 'main') │ ├── servicos.py # Lógica de Negócio (CRUD Refatorado - SEM print/input) │ ├── modelos.py # Estruturas de Dados │ └── persistencia.py # Leitura e escrita em JSON │ ├── /data # Simulação do Banco de Dados (JSON) │ ├── ofertas.json │ └── usuarios.json │ └── /web # Camada Visual (Frontend) ├── /css ├── /js └── *.html # Templates Jinja (Ex: loginUsuario.html, listaDeProdutos.html)
+Para evitar erros de `ModuleNotFound`, o servidor deve ser executado a partir da pasta `/src`.
 
-### 2. Inicialização do Servidor
+1.  Abra seu terminal.
+2.  **Navegue para a pasta `src`** dentro do diretório do projeto:
 
-1.  Abra seu terminal na pasta `/projetocfc/src`.
-2.  **Certifique-se de que o ambiente virtual está ativo.**
-3.  Execute o servidor Flask:
+    ```bash
+    cd src
+    ```
+3.  **Certifique-se de que o ambiente virtual está ativo.**
+4.  Execute o servidor Flask:
 
     ```bash
     python app.py
     ```
-4.  Abra seu navegador e acesse a URL que o Flask fornecerá (geralmente: `http://127.0.0.1:5000/`).
+5.  Abra seu navegador e acesse a URL que o Flask fornecerá (geralmente: `http://127.0.0.1:5000/`).
 
-## 📋 Funcionalidades Chave 
-
-A lógica das seguintes funcionalidades está completa e disponível para ser integrada ao Front-end via rotas Flask:
+## 📋 Funcionalidades Chave (Backend Atualizado)
 
 | Funcionalidade | Implementação |
 | :--- | :--- |
-| **Login e Cadastro** | Rotas `/login` (POST) e `/cadastro` (GET) implementadas para controle de acesso. |
-| **CRUD de Oferta (C/R/U/D)** | Lógica completa de CRUD de Oferta (incluindo Edição e Exclusão Segura) no módulo `servicos.py`. |
+| **Login e Cadastro** | Refatorado para autenticação por **E-mail e Senha**. Rotas `/api/login` (POST) e `/cadastro` (GET) implementadas. |
+| **CRUD de Oferta (C/R/U/D)** | Lógica completa de CRUD de Oferta no módulo `servicos.py`. **Front-end de listagem e detalhes agora é 100% dinâmico.** |
 | **Transação** | Lógica de compra fracionada por Kg implementada em `servicos.py`. |
-| **Histórico** | Lógica de rastreabilidade (compras/vendas) pronta para ser consumida pela API. |
+| **Histórico** | Lógica de rastreabilidade (compras/vendas) integrada à tela `/historicoDeCompras.html` de forma dinâmica. |
+| **Controle de Acesso** | Rotas de cadastro e edição de ofertas são restritas via *decorator* `@requer_perfil('Gerador')`. |

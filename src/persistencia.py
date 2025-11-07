@@ -27,7 +27,7 @@ def get_next_id(data_dict):
 def salvar_novo_usuario(novo_usuario):
     dados_usuarios = load_data(USUARIOS_FILE)
     novo_id = str(get_next_id(dados_usuarios))
-    novo_usuario['id'] = novo_id 
+    novo_usuario['id'] = novo_id
     dados_usuarios[novo_id] = novo_usuario
     save_data(dados_usuarios, USUARIOS_FILE)
     return novo_usuario

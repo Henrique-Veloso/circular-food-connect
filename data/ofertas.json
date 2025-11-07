@@ -1,45 +1,14 @@
 {
     "1": {
-        "id": "1",
         "gerador_id": "1",
-        "titulo": "Laranja",
-        "descricao": "laranja ressecada",
-        "quantidade": "0.00",
+        "titulo": "Casca de Banana Seca",
+        "descricao": "Casca de banana ressecada",
+        "quantidade": "150",
         "localizacao": "Recife",
         "laudo_link": null,
-        "status": "Removida",
-        "timestamp_cadastro": 1762271987,
-        "valor_de_venda": "35.0",
-        "historico_compras": [
-            {
-                "comprador_id": "2",
-                "quantidade": 50.0,
-                "timestamp": 1762272168
-            },
-            {
-                "comprador_id": "2",
-                "quantidade": 100.0,
-                "timestamp": 1762272183
-            }
-        ]
-    },
-    "2": {
-        "id": "2",
-        "gerador_id": "1",
-        "titulo": "Banana  nanica",
-        "descricao": "Casca de banana seca",
-        "quantidade": "50.0",
-        "localizacao": "Recife",
-        "laudo_link": null,
-        "status": "Removida",
-        "timestamp_cadastro": 1762352731,
-        "valor_de_venda": "50.0",
-        "historico_compras": [
-            {
-                "comprador_id": "2",
-                "quantidade": 50.0,
-                "timestamp": 1762352814
-            }
-        ]
+        "status": "Ativa",
+        "timestamp_cadastro": 1762529963,
+        "valor_de_venda": "80",
+        "id": "1"
     }
 }
