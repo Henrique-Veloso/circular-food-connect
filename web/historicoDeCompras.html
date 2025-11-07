@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Transações - OLX Cópia</title>
+    
+    <!-- Carrega o Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carrega a fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos customizados adicionais */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5; /* Fundo cinza claro */
+        }
+        
+        /* Ajuste para os ícones no header */
+        .header-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem; /* 12px */
+            color: #4a4a4a;
+        }
+        .header-icon svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- HEADER (Copiado do index.html para consistência) -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto">
+            <!-- Linha Superior do Header -->
+            <div class="flex items-center justify-between space-x-4">
+                
+                <!-- Logo -->
+                <div class="logo">
+                    <!-- Caminho final que funcionou para o logo -->
+                    <img src="/static/logo.png" alt="Logo" class="h-10 w-auto">
+                </div>
+
+                <!-- Barra de Busca -->
+                <div class="flex-grow flex items-center border border-gray-300 rounded-md overflow-hidden max-w-xl">
+                    <span class="pl-3 text-gray-500">
+                        <!-- Ícone de Lupa (SVG) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </span>
+                    <input type="search" placeholder="Buscar" class="p-3 w-full focus:outline-none">
+                    <button class="bg-gray-100 p-3 h-full border-l border-gray-300">
+                        <span class="text-gray-600 font-semibold text-sm flex items-center">
+                            <!-- Ícone de Localização (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            PE
+                            <!-- Ícone de Chevron (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Links da Direita -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span>Plano Profissional</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Meus Anúncios</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Chat</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span>Notificações</span>
+                    </a>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex items-center space-x-3">
+                    <button class="font-semibold text-purple-700 px-4 py-2 rounded-full hover:bg-purple-100">
+                        Entrar
+                    </button>
+                    <button class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-full hover:bg-orange-600 shadow-lg">
+                        Anunciar grátis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow container mx-auto p-4 lg:p-8">
+        <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 w-full max-w-4xl mx-auto">
+            
+            <h1 class="text-2xl font-bold text-gray-900 mb-6">Meu Histórico de Transações</h1>
+
+            <!-- Tabs (Exemplo de Compras / Vendas) -->
+            <div class="mb-6 border-b border-gray-200">
+                <nav class="flex space-x-6" aria-label="Tabs">
+                    <a href="#" class="text-purple-600 border-purple-600 border-b-2 py-2 px-1 text-sm font-medium" aria-current="page">
+                        Minhas Compras
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
+                        Minhas Vendas
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
+                        Todas as Transações
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Tabela de Histórico -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Tipo
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Produto (Oferta)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Quantidade
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Parceiro (Vendedor)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Data
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        
+                        <!-- Item do Histórico 1 (Exemplo) -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Compra
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Laranja</div>
+                                <div class="text-sm text-gray-500">ID da Oferta: 1</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">50.0 Kg</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Henrique</div>
+                                <div class="text-sm text-gray-500">ID do Vendedor: 1</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">2025-10-27 14:30:00</div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Item do Histórico 2 (Exemplo) -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Compra
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Laranja</div>
+                                <div class="text-sm text-gray-500">ID da Oferta: 1</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">100.0 Kg</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Henrique</div>
+                                <div class="text-sm text-gray-500">ID do Vendedor: 1</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">2025-10-27 14:32:00</div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Item do Histórico 3 (Exemplo) -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Compra
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Banana nanica</div>
+                                <div class="text-sm text-gray-500">ID da Oferta: 2</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">50.0 Kg</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Henrique</div>
+                                <div class="text-sm text-gray-500">ID do Vendedor: 1</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">2025-10-28 10:15:00</div>
+                            </td>
+                        </tr>
+
+                        <!-- Mais linhas podem ser adicionadas dinamicamente -->
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Placeholder para quando não há histórico -->
+            <!-- 
+            <div class="text-center py-12">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18V3H3zm8 14H5v-2h6v2zm0-4H5v-2h6v2zm0-4H5V7h6v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Sem transações</h3>
+                <p class="mt-1 text-sm text-gray-500">Você ainda não realizou nenhuma compra.</p>
+            </div>
+            -->
+
+        </div>
+    </main>
+
+    <!-- FOOTER Simples -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center text-xs text-gray-500">
+            <p>&copy; 2025 Circular Food Conect. Todos os direitos reservados.</p>
+            <p class="mt-1">
+                <a href="#" class="underline hover:text-gray-700">Termos de Uso</a>
+                <span class="mx-2">&middot;</span>
+                <a href="#" class="underline hover:text-gray-700">Política de Privacidade</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

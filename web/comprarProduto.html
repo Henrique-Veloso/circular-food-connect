@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Anúncio - OLX Cópia</title>
+    <!-- Carrega o Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carrega a fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos customizados adicionais */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5; /* Fundo cinza claro */
+        }
+        
+        /* Ajuste para os ícones no header */
+        .header-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem; /* 12px */
+            color: #4a4a4a;
+        }
+        .header-icon svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Classes para a galeria de imagens */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+            height: 450px; /* Altura fixa para a galeria */
+        }
+        .gallery-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .gallery-item img.active {
+            border-color: #8B5CF6; /* Roxo (purple-500) para destacar */
+        }
+        
+        /* Para o sidebar "colar" ao rolar a página */
+        .sticky-sidebar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 150px; /* Deve ser maior que a altura do header */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- HEADER (Copiado do index.html para consistência) -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto">
+            <!-- Linha Superior do Header -->
+            <div class="flex items-center justify-between space-x-4">
+                
+                <!-- Logo -->
+                <div class="logo">
+                    <!-- Caminho final que funcionou para o logo -->
+                    <img src="/static/logo.png" alt="Logo" class="h-10 w-auto">
+                </div>
+
+                <!-- Barra de Busca -->
+                <div class="flex-grow flex items-center border border-gray-300 rounded-md overflow-hidden max-w-xl">
+                    <span class="pl-3 text-gray-500">
+                        <!-- Ícone de Lupa (SVG) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </span>
+                    <input type="search" placeholder="Buscar" class="p-3 w-full focus:outline-none">
+                    <button class="bg-gray-100 p-3 h-full border-l border-gray-300">
+                        <span class="text-gray-600 font-semibold text-sm flex items-center">
+                            <!-- Ícone de Localização (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            PE
+                            <!-- Ícone de Chevron (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Links da Direita -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span>Plano Profissional</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Meus Anúncios</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Chat</span>
+                    </a>
+                    <a href="#" class="header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span>Notificações</span>
+                    </a>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex items-center space-x-3">
+                    <button class="font-semibold text-purple-700 px-4 py-2 rounded-full hover:bg-purple-100">
+                        Entrar
+                    </button>
+                    <button class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-full hover:bg-orange-600 shadow-lg">
+                        Anunciar grátis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BARRA DE NAVEGAÇÃO DE CATEGORIAS (Copiada) -->
+    <nav class="bg-white shadow-sm py-2">
+        <!-- ... (conteúdo da nav de categorias omitido para focar na página do anúncio) ... -->
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL DO ANÚNCIO -->
+    <main class="container mx-auto p-4 mt-6">
+        
+        <!-- Breadcrumbs -->
+        <div class="text-xs text-gray-600 mb-2">
+            Pernambuco > Grande Recife > Recife > Pauliceia
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Coluna Esquerda (Galeria e Detalhes) -->
+            <div class="flex-grow lg:w-2/3">
+                
+                <!-- Galeria de Imagens -->
+                <div class="bg-white rounded-lg shadow-md mb-6">
+                    <div class="gallery-grid p-4">
+                        <!-- Imagem Principal (Placeholder) -->
+                        <div class="gallery-item" onclick="changeImage(event)">
+                            <img id="main-image" src="https://placehold.co/800x600/eee/ccc?text=Ar+Condicionado" alt="[Imagem principal do Ar condicionado]" class="active">
+                        </div>
+                        <!-- Miniatura 1 (Placeholder) -->
+                        <div class="gallery-item" onclick="changeImage(event)">
+                            <img src="https://placehold.co/300x200/ddd/bbb?text=Ar+Condicionado+2" alt="[Imagem miniatura 1]" class="">
+                        </div>
+                        <!-- Miniatura 2 (Placeholder) -->
+                        <div class="gallery-item" onclick="changeImage(event)">
+                            <img src="https://placehold.co/300x200/ccc/aaa?text=Ar+Condicionado+3" alt="[Imagem miniatura 2]" class="">
+                        </div>
+                    </div>
+                    <!-- Ações da Imagem -->
+                    <div class="p-4 border-t border-gray-200 flex justify-between items-center">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center text-sm text-gray-600 hover:text-purple-600">
+                                <!-- Ícone Denunciar (SVG) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                                </svg>
+                                Denunciar
+                            </button>
+                            <button class="flex items-center text-sm text-gray-600 hover:text-purple-600">
+                                <!-- Ícone Favoritar (SVG) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z" />
+                                </svg>
+                                Favoritar
+                            </button>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            Anunciado em 05/11 às 13:28
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Título e Descrição -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-4">
+                        Vende-se Ar condicionado completo split 12000 BTUS (USADO EM BOM ESTADO)
+                    </h1>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        Desfrute do conforto em estar um lar ou sala com este ar condicionado split de 12000 BTUs. Ideal para climatizar ambientes, proporcionando uma atmosfera agradável e fresca em sua casa. Em perfeito estado de funcionamento e pronto a ser instalado.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        OBSERVAÇÃO: o aparelho selado se encontra instalado para demonstração de funcionamento. O COMPRADOR SE RESPONSABILIZA PELA COMPRA E RETIRADA DO PRODUTO.
+                    </p>
+                </div>
+
+                <!-- Detalhes -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Detalhes</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <!-- Item Detalhe -->
+                        <div class="flex items-start space-x-3">
+                            <!-- Ícone Categoria (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" /></svg>
+                            <div>
+                                <span class="text-sm text-gray-500">Categoria</span>
+                                <p class="font-semibold text-gray-800">Ar-condicionado</p>
+                            </div>
+                        </div>
+                        <!-- Item Detalhe -->
+                        <div class="flex items-start space-x-3">
+                            <!-- Ícone Tipo (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                            <div>
+                                <span class="text-sm text-gray-500">Tipo</span>
+                                <p class="font-semibold text-gray-800">Ar-condicionado Split</p>
+                            </div>
+                        </div>
+                        <!-- Item Detalhe -->
+                        <div class="flex items-start space-x-3">
+                            <!-- Ícone Condição (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                            <div>
+                                <span class="text-sm text-gray-500">Condição</span>
+                                <p class="font-semibold text-gray-800">Usado - Bom</p>
+                            </div>
+                        </div>
+                        <!-- Item Detalhe -->
+                        <div class="flex items-start space-x-3">
+                            <!-- Ícone Voltagem (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            <div>
+                                <span class="text-sm text-gray-500">Voltagem</span>
+                                <p class="font-semibold text-gray-800">220v</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Coluna Direita (Preço e Vendedor) -->
+            <div class="lg:w-1/3">
+                <div class="sticky-sidebar space-y-6">
+
+                    <!-- Caixa de Preço e Compra -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">R$ 250</h2>
+                        <p class="text-sm text-gray-600 mb-1">ou em até 6x de R$ 53,32</p>
+                        <p class="text-xs text-gray-500 mb-6">Taxas e juros podem ser aplicáveis</p>
+
+                        <button class="w-full bg-orange-500 text-white font-semibold py-3 rounded-full hover:bg-orange-600 shadow-lg text-lg mb-3">
+                            Comprar
+                        </button>
+                        <button class="w-full bg-white text-purple-700 font-semibold py-3 rounded-full hover:bg-purple-100 border-2 border-purple-700 text-lg">
+                            Chat
+                        </button>
+                    </div>
+
+                    <!-- Caixa de Histórico de Vendas -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Histórico de vendas</h3>
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl font-bold text-gray-800 mr-2">5,0</span>
+                            <!-- Ícones de Estrela (SVG) -->
+                            <div class="flex text-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                <!-- ... (repetir 4x) ... -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Baseado em 5 avaliações</p>
+
+                        <div class="flex justify-around text-center mb-4">
+                            <div>
+                                <p class="text-lg font-bold text-gray-800">33</p>
+                                <p class="text-sm text-gray-600">Vendas</p>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-gray-800">06</p>
+                                <p class="text-sm text-gray-600">Meses</p>
+                            </div>
+                        </div>
+
+                        <h4 class="font-semibold text-gray-800 mb-2">Informações verificadas</h4>
+                        <div class="space-y-1">
+                            <p class="flex items-center text-sm text-green-600">
+                                <!-- Ícone Check (SVG) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                E-mail
+                            </p>
+                             <p class="flex items-center text-sm text-green-600">
+                                <!-- Ícone Check (SVG) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                Telefone
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript para a Galeria -->
+    <script>
+        // Imagem principal
+        const mainImage = document.getElementById('main-image');
+        // Todas as imagens clicáveis (incluindo a principal)
+        const galleryItems = document.querySelectorAll('.gallery-item img');
+
+        function changeImage(event) {
+            // Remove a borda 'active' de todas as imagens
+            galleryItems.forEach(img => {
+                img.classList.remove('active');
+            });
+            
+            // Adiciona a borda 'active' na imagem clicada
+            const clickedImage = event.currentTarget.querySelector('img');
+            clickedImage.classList.add('active');
+            
+            // Define a imagem principal como a imagem que foi clicada
+            mainImage.src = clickedImage.src;
+            mainImage.alt = clickedImage.alt;
+        }
+    </script>
+
+</body>
+</html>

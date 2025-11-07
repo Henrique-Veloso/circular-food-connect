@@ -41,6 +41,15 @@ def listagem_ofertas_page():
 def cadastro_oferta_page():
     return render_template('cadastrarProduto.html', usuario=obter_usuario_logado())
 
+@app.route('/ofertas/comprar/<oferta_id>', methods=['GET'])
+def comprar_produto_page(oferta_id):
+    return render_template('comprarProduto.html', usuario=obter_usuario_logado(), oferta_id=oferta_id)
+
+@app.route('/ofertas/editar/<oferta_id>', methods=['GET'])
+@requer_perfil('Gerador')
+def editar_produto_page(oferta_id):
+    return render_template('edicaoProduto.html', usuario=obter_usuario_logado(), oferta_id=oferta_id)
+
 @app.route('/historico', methods=['GET'])
 def historico_page():
     if not obter_usuario_logado():
