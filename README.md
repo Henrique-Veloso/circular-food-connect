@@ -1,16 +1,10 @@
-# ♻️ Circular Food Connect - Protótipo Web (Flask + JSON)
+# Circular Food Connect - Protótipo Web (Flask + JSON)
 
 Repositório do protótipo **Circular Food Connect**!
 
 Este projeto é uma aplicação web construída com **Flask** para simular uma plataforma de economia circular. Seu principal diferencial é a lógica de otimização (IA) em segundo plano, que conecta Geradores de excedentes a Receptores de matéria-prima, promovendo a sustentabilidade alimentar.
 
-**Status Atual:** **Sprint 3: Refatoração de Lógica e Padrão de Excelência Visual Concluído.**
-
-## ✨ Padrão de Excelência Visual (Front-end)
-
-Todas as páginas (`index.html`, `loginUsuario.html`, `cadastrarUsuario.html`, `listaDeProdutos.html`, `comprarProduto.html`, `historicoDeCompras.html`) foram padronizadas para uma **estética clean e consistente**, utilizando a fonte Inter e o esquema de cores Verde (`Green-600`) para ações primárias/conexão e Laranja (`Orange-500`) para destaques e botões de alta conversão. O caminho da logo foi corrigido para `/static/img/logo.png`.
-
-## 🚀 Como Executar o Protótipo Web
+## Como Executar o Protótipo Web
 
 ### Pré-requisitos
 
