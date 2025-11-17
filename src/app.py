@@ -3,17 +3,17 @@ from servicos import *
 import os
 from werkzeug.utils import secure_filename
 import time
-from functools import wraps
 
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'web'))
-UPLOAD_FOLDER = os.path.join(template_dir, 'img', 'ofertas')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'super_secret_key_cfc_2025'
 
+# Configuração de upload de arquivos
+# Certifique-se de que esta pasta existe no seu projeto: /web/img/ofertas
+UPLOAD_FOLDER = os.path.join(template_dir, 'img', 'ofertas')
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -24,12 +24,12 @@ def obter_usuario_logado():
 
 def requer_perfil(tipo: str):
     def decorator(f):
-        @wraps(f)
         def decorated_function(*args, **kwargs):
             usuario = obter_usuario_logado()
             if not usuario or usuario.get('tipo') != tipo:
                 return redirect(url_for('login_page', erro="Acesso restrito."))
             return f(*args, **kwargs)
+        decorated_function.__name__ = f.__name__
         return decorated_function
     return decorator
 
@@ -123,21 +123,32 @@ def api_cadastro_oferta():
     if not usuario:
         return redirect(url_for('login_page', erro="Faça login para cadastrar uma oferta."))
     
-    try:
-        caminhos_imagens = []
-        files = request.files.getlist('imagens')
-        for i, file in enumerate(files[:3]):
-            if file.filename == '':
-                continue
-            if not allowed_file(file.filename):
-                raise ValueError("Formato de arquivo não permitido. Use PNG, JPG ou GIF.")
-
+    caminhos_imagens = []
+    
+    files = request.files.getlist('imagens')
+    
+    # Limita a 3 imagens (principal e 2 miniaturas)
+    for i, file in enumerate(files):
+        if i >= 3: 
+            break
+            
+        if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            
             unique_filename = f"{usuario['id']}_{int(time.time())}_{i}_{filename}"
             file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
-            file.save(file_path)
-            caminhos_imagens.append(f"img/ofertas/{unique_filename}")
+            
+            try:
+                file.save(file_path)
+                # Armazena o caminho relativo (a partir de /web)
+                caminhos_imagens.append(f"img/ofertas/{unique_filename}")
+            except Exception as e:
+                return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro ao salvar arquivo: {str(e)}")
 
+        elif file.filename != '':
+             return render_template('cadastrarProduto.html', usuario=usuario, erro="Formato de arquivo não permitido. Use PNG, JPG ou GIF.")
+
+    try:
         gerador_id = usuario['id']
         titulo = request.form['titulo']
         descricao = request.form['descricao']
@@ -146,6 +157,7 @@ def api_cadastro_oferta():
         cidade = request.form['cidade']
         
         criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade, caminhos_imagens)
+        
         return redirect(url_for('listagem_ofertas_page', sucesso="Oferta publicada com sucesso!"))
     except ValueError as e:
         return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro de Validação: {str(e)}")
