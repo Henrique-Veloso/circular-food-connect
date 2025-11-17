@@ -12,6 +12,11 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Estilo para destacar a aba ativa */
+        .tab-link.active {
+            color: #10B981; /* green-600 */
+            border-bottom-color: #10B981;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -47,13 +52,19 @@
             <h1 class="text-2xl font-bold text-gray-900 mb-6">Meu Histórico de Transações</h1>
             <div class="mb-6 border-b border-gray-200">
                 <nav class="flex space-x-6" aria-label="Tabs">
-                    <a href="#" class="text-green-600 border-green-600 border-b-2 py-2 px-1 text-sm font-medium" aria-current="page">
+                    
+                    <a href="#" id="tab-compra" data-filter="Compra" 
+                       class="tab-link text-gray-500 border-b-2 py-2 px-1 text-sm font-medium active border-green-600 text-green-600">
                         Minhas Compras
                     </a>
-                    <a href="#" class="text-gray-500 hover:text-green-700 hover:border-green-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
+                    
+                    <a href="#" id="tab-venda" data-filter="Venda"
+                       class="tab-link text-gray-500 hover:text-green-700 hover:border-green-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
                         Minhas Vendas
                     </a>
-                    <a href="#" class="text-gray-500 hover:text-green-700 hover:border-green-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
+                    
+                    <a href="#" id="tab-todas" data-filter="Todas"
+                       class="tab-link text-gray-500 hover:text-green-700 hover:border-green-300 border-transparent border-b-2 py-2 px-1 text-sm font-medium">
                         Todas
                     </a>
                 </nav>
@@ -79,10 +90,10 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody id="historico-tabela-corpo" class="bg-white divide-y divide-gray-200">
                         {% if historico %}
                             {% for transacao in historico %}
-                            <tr>
+                            <tr data-type="{{ transacao.tipo }}"> 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                           {% if transacao.tipo == 'Compra' %}bg-green-100 text-green-800{% else %}bg-orange-100 text-orange-800{% endif %}">
@@ -106,7 +117,7 @@
                             {% endfor %}
                         {% else %}
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td id="sem-transacoes" colspan="5" class="px-6 py-12 text-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18V3H3zm8 14H5v-2h6v2zm0-4H5v-2h6v2zm0-4H5V7h6v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z" />
                                 </svg>
@@ -125,5 +136,72 @@
         <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect
         e seus parceiros.
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab-link');
+            const tableBody = document.getElementById('historico-tabela-corpo');
+            const rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+            const semTransacoes = document.getElementById('sem-transacoes');
+            
+            // Função principal de filtragem
+            function filterHistory(filterType) {
+                let foundMatch = false;
+
+                rows.forEach(row => {
+                    const rowType = row.getAttribute('data-type');
+                    
+                    if (rowType) {
+                        if (filterType === 'Todas' || rowType === filterType) {
+                            row.style.display = ''; // Mostra a linha
+                            foundMatch = true;
+                        } else {
+                            row.style.display = 'none'; // Esconde a linha
+                        }
+                    }
+                });
+
+                // Lida com a mensagem "Sem transações" se a tabela estiver inicialmente vazia
+                if (semTransacoes) {
+                    semTransacoes.style.display = 'none'; 
+                }
+
+                // Se não encontrou nenhuma linha correspondente ao filtro, e a tabela NÃO estava vazia
+                // (Esta lógica é complexa no front-end, vamos focar no filtro de visibilidade)
+                // Se a tabela já estava vazia, a mensagem "Sem transações" já está lá.
+            }
+
+            // Função para alternar o estilo ativo
+            function setActiveTab(clickedElement) {
+                tabs.forEach(tab => {
+                    tab.classList.remove('active', 'border-green-600', 'text-green-600');
+                    tab.classList.add('border-transparent', 'text-gray-500');
+                });
+                clickedElement.classList.add('active', 'border-green-600', 'text-green-600');
+                clickedElement.classList.remove('border-transparent', 'text-gray-500');
+            }
+
+            // Adiciona listeners para os cliques nas abas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const filter = this.getAttribute('data-filter');
+                    setActiveTab(this);
+                    filterHistory(filter);
+                });
+            });
+
+            // 1. Define 'Minhas Compras' como ativo inicialmente, a menos que o usuário seja apenas Gerador
+            // Nota: Os dados iniciais já são o histórico completo se o usuário for Receptor/Gerador
+            const initialFilter = "{{ usuario.tipo }}" === 'Gerador' ? 'Venda' : 'Compra';
+            
+            // 2. Tenta acionar o filtro inicial (por padrão, é Compra)
+            const initialTab = document.getElementById('tab-compra');
+            if (initialTab) {
+                setActiveTab(initialTab);
+                filterHistory('Compra');
+            }
+        });
+    </script>
 </body>
 </html>

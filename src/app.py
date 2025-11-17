@@ -8,16 +8,13 @@ template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'we
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'super_secret_key_cfc_2025'
 
-# Configuração de upload de arquivos
-# Certifique-se de que esta pasta existe no seu projeto: /web/img/ofertas
 UPLOAD_FOLDER = os.path.join(template_dir, 'img', 'ofertas')
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def obter_usuario_logado():
     return session.get('usuario_ativo', None)
@@ -63,11 +60,17 @@ def comprar_produto_page(oferta_id):
     if not oferta or oferta.get('status') != 'Ativa':
         return redirect(url_for('listagem_ofertas_page', erro="Oferta não encontrada ou inativa."))
     gerador = obter_usuario_por_credencial(oferta['gerador_id'])
+    
+    sucesso = request.args.get('sucesso')
+    erro = request.args.get('erro')
+
     return render_template('comprarProduto.html', 
         usuario=obter_usuario_logado(), 
         oferta=oferta, 
         gerador=gerador,
-        oferta_id=oferta_id
+        oferta_id=oferta_id,
+        sucesso=sucesso,
+        erro=erro
     )
 
 @app.route('/ofertas/editar/<oferta_id>', methods=['GET'])
@@ -127,7 +130,6 @@ def api_cadastro_oferta():
     
     files = request.files.getlist('imagens')
     
-    # Limita a 3 imagens (principal e 2 miniaturas)
     for i, file in enumerate(files):
         if i >= 3: 
             break
@@ -140,7 +142,6 @@ def api_cadastro_oferta():
             
             try:
                 file.save(file_path)
-                # Armazena o caminho relativo (a partir de /web)
                 caminhos_imagens.append(f"img/ofertas/{unique_filename}")
             except Exception as e:
                 return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro ao salvar arquivo: {str(e)}")
@@ -163,6 +164,38 @@ def api_cadastro_oferta():
         return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro de Validação: {str(e)}")
     except Exception as e:
         return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro inesperado: {str(e)}")
+
+@app.route('/api/ofertas/comprar/<oferta_id>', methods=['POST'])
+def api_compra_oferta(oferta_id):
+    usuario = obter_usuario_logado()
+    if not usuario:
+        return redirect(url_for('login_page', erro="Você precisa estar logado para finalizar uma compra."))
+
+    if usuario.get('tipo') != 'Receptor':
+        return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro="Apenas usuários Receptores podem realizar esta transação."))
+
+    try:
+        quantidade_str = request.form['quantidade_desejada']
+        quantidade_desejada = float(quantidade_str)
+        
+        if quantidade_desejada <= 0:
+            raise ValueError("A quantidade deve ser maior que zero.")
+
+        comprador_id = usuario['id']
+        
+        resultado = transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada)
+        
+        if resultado['status'] == 'Removida':
+             return redirect(url_for('listagem_ofertas_page', sucesso=f"Compra de {quantidade_desejada} Kg realizada! Oferta foi esgotada."))
+        
+        return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, sucesso=f"Compra de {quantidade_desejada} Kg realizada com sucesso! Restam {resultado['restante']} Kg."))
+
+    except ValueError as e:
+        return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro de Validação: {str(e)}"))
+    
+    except Exception as e:
+        return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro inesperado no servidor: {str(e)}"))
+
 
 @app.route('/api/ofertas/ativas', methods=['GET'])
 def api_listar_ofertas():
