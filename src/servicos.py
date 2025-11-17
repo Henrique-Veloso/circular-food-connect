@@ -61,7 +61,7 @@ def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_ven
         descricao=descricao,
         quantidade=str(quantidade),
         cidade=cidade,
-        imagens=imagens
+        imagens=imagens 
     )
     nova['valor_de_venda'] = str(valor_de_venda)
     return salvar_nova_oferta(nova)
