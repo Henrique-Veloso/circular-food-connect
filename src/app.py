@@ -127,13 +127,11 @@ def api_cadastro_oferta():
         return redirect(url_for('login_page', erro="Faça login para cadastrar uma oferta."))
     
     caminhos_imagens = []
-    
     files = request.files.getlist('imagens')
     
     for i, file in enumerate(files):
         if i >= 3: 
             break
-            
         if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             
@@ -145,7 +143,6 @@ def api_cadastro_oferta():
                 caminhos_imagens.append(f"img/ofertas/{unique_filename}")
             except Exception as e:
                 return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro ao salvar arquivo: {str(e)}")
-
         elif file.filename != '':
              return render_template('cadastrarProduto.html', usuario=usuario, erro="Formato de arquivo não permitido. Use PNG, JPG ou GIF.")
 
@@ -177,7 +174,6 @@ def api_compra_oferta(oferta_id):
     try:
         quantidade_str = request.form['quantidade_desejada']
         quantidade_desejada = float(quantidade_str)
-        
         if quantidade_desejada <= 0:
             raise ValueError("A quantidade deve ser maior que zero.")
 
@@ -187,12 +183,10 @@ def api_compra_oferta(oferta_id):
         
         if resultado['status'] == 'Removida':
              return redirect(url_for('listagem_ofertas_page', sucesso=f"Compra de {quantidade_desejada} Kg realizada! Oferta foi esgotada."))
-        
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, sucesso=f"Compra de {quantidade_desejada} Kg realizada com sucesso! Restam {resultado['restante']} Kg."))
 
     except ValueError as e:
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro de Validação: {str(e)}"))
-    
     except Exception as e:
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro inesperado no servidor: {str(e)}"))
 
