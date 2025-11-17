@@ -1,0 +1,26 @@
+{
+    "1": {
+        "gerador_id": "1",
+        "titulo": "Borra de Caf\u00e9",
+        "descricao": "Borras de caf\u00e9 ressacado em sacos para compostagem.",
+        "quantidade": "40.0",
+        "localizacao": "Recife / PE",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/1_1763421164_0_Capa-Borra-de-Cafe.jpg",
+            "img/ofertas/1_1763421164_1_borra_cafe_destaque_zona_sul.jpg",
+            "img/ofertas/1_1763421164_2_6317c179cc21229129efa69b0bf4.jpg"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1763421164,
+        "valor_de_venda": "15",
+        "id": "1",
+        "historico_compras": [
+            {
+                "comprador_id": "2",
+                "quantidade": 30.0,
+                "timestamp": 1763421694
+            }
+        ]
+    }
+}
