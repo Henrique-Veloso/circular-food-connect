@@ -9,7 +9,7 @@ def novo_usuario(nome, tipo, cidade, email, senha):
         'ofertas_ativas': 0
     }
 
-def nova_oferta(gerador_id, titulo, descricao, quantidade, cidade):
+def nova_oferta(gerador_id, titulo, descricao, quantidade, cidade, imagens=None):
     return {
         'gerador_id': gerador_id,
         'titulo': titulo,
@@ -17,6 +17,7 @@ def nova_oferta(gerador_id, titulo, descricao, quantidade, cidade):
         'quantidade': quantidade,
         'localizacao': cidade,
         'laudo_link': None,
+        'imagens': imagens if imagens is not None else [],
         'status': 'Ativa',
         'timestamp_cadastro': None
     }

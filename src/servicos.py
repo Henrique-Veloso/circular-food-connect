@@ -12,7 +12,7 @@ def autenticar_usuario(email, senha):
     for usuario in dados_usuarios.values():
         if usuario.get('email', '') == email and usuario.get('senha', '') == senha:
             usuario_limpo = usuario.copy()
-            usuario_limpo.pop('senha', None) 
+            usuario_limpo.pop('senha', None)
             return usuario_limpo
     return None
 
@@ -47,7 +47,7 @@ def obter_oferta_por_id(oferta_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     return dados_ofertas.get(oferta_id)
 
-def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade):
+def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade, imagens=None):
     if not all([titulo, descricao, quantidade, valor_de_venda]):
         raise ValueError("Campos obrigatórios faltando.")
     try:
@@ -60,7 +60,8 @@ def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_ven
         titulo=titulo,
         descricao=descricao,
         quantidade=str(quantidade),
-        cidade=cidade
+        cidade=cidade,
+        imagens=imagens
     )
     nova['valor_de_venda'] = str(valor_de_venda)
     return salvar_nova_oferta(nova)

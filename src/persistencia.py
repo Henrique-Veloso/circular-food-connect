@@ -1,7 +1,6 @@
 import json
 import os
 import time
-
 USUARIOS_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'usuarios.json')
 OFERTAS_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'ofertas.json')
 
@@ -21,7 +20,7 @@ def save_data(data, file_path):
 
 def get_next_id(data_dict):
     if not data_dict:
-        return 1
+        return "1"
     return max([int(k) for k in data_dict.keys()]) + 1
 
 def salvar_novo_usuario(novo_usuario):
