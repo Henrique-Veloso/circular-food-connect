@@ -19,6 +19,25 @@
             position: sticky;
             top: 20px; 
         }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+            height: 450px; 
+        }
+        .gallery-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -74,14 +93,21 @@
                 <div class="bg-white rounded-2xl shadow-xl">
                     <h2 class="text-xl font-semibold text-gray-800 p-6 border-b">Fotos do Material</h2>
                     <div class="gallery-grid p-4">
+                        {% set placeholder_url = 'https://placehold.co/800x600/f97316/ffffff?text=' + oferta.titulo | replace(' ', '+') %}
+                        
+                        {% set img_principal = url_for('static', filename=oferta.imagens[0]) if oferta.imagens and oferta.imagens[0] else placeholder_url %}
                         <div class="gallery-item" onclick="changeImage(event)">
-                            <img id="main-image" src="https://placehold.co/800x600/f97316/ffffff?text={{ oferta.titulo | replace(' ', '+') }}" alt="[Imagem principal da Oferta]" class="active">
+                            <img id="main-image" src="{{ img_principal }}" alt="[Imagem principal da Oferta]" class="active">
                         </div>
+
+                        {% set img_miniatura_1 = url_for('static', filename=oferta.imagens[1]) if oferta.imagens and oferta.imagens[1] else placeholder_url | replace('800x600', '300x200') + '+1' %}
                         <div class="gallery-item" onclick="changeImage(event)">
-                            <img src="https://placehold.co/300x200/fb923c/ffffff?text={{ oferta.titulo | replace(' ', '+') }} + 2" alt="[Imagem miniatura 1]" class="">
+                            <img src="{{ img_miniatura_1 }}" alt="[Imagem miniatura 1]" class="">
                         </div>
+
+                        {% set img_miniatura_2 = url_for('static', filename=oferta.imagens[2]) if oferta.imagens and oferta.imagens[2] else placeholder_url | replace('800x600', '300x200') + '+2' %}
                         <div class="gallery-item" onclick="changeImage(event)">
-                            <img src="https://placehold.co/300x200/eab308/ffffff?text={{ oferta.titulo | replace(' ', '+') }} + 3" alt="[Imagem miniatura 2]" class="">
+                            <img src="{{ img_miniatura_2 }}" alt="[Imagem miniatura 2]" class="">
                         </div>
                     </div>
                 </div>
