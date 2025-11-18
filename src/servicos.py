@@ -43,6 +43,7 @@ def obter_todas_ofertas_ativas():
     ofertas_ativas = [oferta for oferta in dados_ofertas.values() if oferta.get('status') == 'Ativa']
     return ofertas_ativas
 
+# CORRIGIDO: Implementação correta para carregar do JSON (dicionário)
 def obter_oferta_por_id(oferta_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     return dados_ofertas.get(oferta_id)
@@ -94,6 +95,7 @@ def editar_oferta_servico(oferta_id, gerador_id, novos_dados):
     save_data(dados_ofertas, OFERTAS_FILE)
     return oferta
 
+# CORRIGIDO: Versão robusta para deleção/remoção
 def deletar_oferta_servico(oferta_id, gerador_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     oferta = dados_ofertas.get(oferta_id)
@@ -103,9 +105,10 @@ def deletar_oferta_servico(oferta_id, gerador_id):
         oferta['status'] = 'Removida'
         save_data(dados_ofertas, OFERTAS_FILE)
         return True, "Oferta marcada como 'Removida' (histórico preservado)."
-    del dados_ofertas[oferta_id]
-    save_data(dados_ofertas, OFERTAS_FILE)
-    return True, "Oferta excluída permanentemente."
+    else:
+        del dados_ofertas[oferta_id]
+        save_data(dados_ofertas, OFERTAS_FILE)
+        return True, "Oferta excluída permanentemente."
 
 def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
     dados_ofertas = load_data(OFERTAS_FILE)
@@ -163,3 +166,15 @@ def obter_historico_transacoes(user_id, user_tipo):
                     transacao['tipo'] = 'Compra'
                     historico.append(transacao)
     return historico
+
+def obter_ofertas_por_gerador_id(gerador_id):
+    """Retorna todas as ofertas (ativas ou não) criadas por um Gerador específico."""
+    dados_ofertas = load_data(OFERTAS_FILE)
+    ofertas_do_gerador = [
+        oferta 
+        for oferta in dados_ofertas.values() 
+        if oferta.get('gerador_id') == gerador_id
+    ]
+    # Opcional: Ordenar por status (Ativa primeiro) ou por data. 
+    # Deixaremos sem ordenação por enquanto.
+    return ofertas_do_gerador
