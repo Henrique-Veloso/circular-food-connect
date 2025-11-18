@@ -7,18 +7,14 @@ import time
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'web'))
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'super_secret_key_cfc_2025'
-
 UPLOAD_FOLDER = os.path.join(template_dir, 'img', 'ofertas')
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 def obter_usuario_logado():
     return session.get('usuario_ativo', None)
-
 def requer_perfil(tipo: str):
     def decorator(f):
         def decorated_function(*args, **kwargs):
@@ -29,41 +25,34 @@ def requer_perfil(tipo: str):
         decorated_function.__name__ = f.__name__
         return decorated_function
     return decorator
-
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', usuario=obter_usuario_logado())
-
+    ofertas = obter_todas_ofertas_ativas()
+    return render_template('index.html', usuario=obter_usuario_logado(), ofertas=ofertas)
 @app.route('/login', methods=['GET'])
 def login_page():
     sucesso = request.args.get('sucesso')
     erro = request.args.get('erro')
     return render_template('loginUsuario.html', sucesso=sucesso, erro=erro)
-
 @app.route('/cadastro', methods=['GET'])
 def cadastro_page():
     return render_template('cadastrarUsuario.html')
-
 @app.route('/ofertas/listagem', methods=['GET'])
 def listagem_ofertas_page():
     ofertas = obter_todas_ofertas_ativas()
     return render_template('listaDeProdutos.html', usuario=obter_usuario_logado(), ofertas=ofertas)
-
 @app.route('/ofertas/cadastro', methods=['GET'])
 @requer_perfil('Gerador')
 def cadastro_oferta_page():
     return render_template('cadastrarProduto.html', usuario=obter_usuario_logado())
-
 @app.route('/ofertas/comprar/<oferta_id>', methods=['GET'])
 def comprar_produto_page(oferta_id):
     oferta = obter_oferta_por_id(oferta_id)
     if not oferta or oferta.get('status') != 'Ativa':
         return redirect(url_for('listagem_ofertas_page', erro="Oferta não encontrada ou inativa."))
     gerador = obter_usuario_por_credencial(oferta['gerador_id'])
-    
     sucesso = request.args.get('sucesso')
     erro = request.args.get('erro')
-
     return render_template('comprarProduto.html', 
         usuario=obter_usuario_logado(), 
         oferta=oferta, 
@@ -72,29 +61,21 @@ def comprar_produto_page(oferta_id):
         sucesso=sucesso,
         erro=erro
     )
-
-# ROTA GET: Carrega a página de edição com os dados atuais
 @app.route('/ofertas/editar/<oferta_id>', methods=['GET'])
 @requer_perfil('Gerador')
 def editar_produto_page(oferta_id):
     oferta = obter_oferta_por_id(oferta_id)
     usuario = obter_usuario_logado()
-    
     if not oferta or oferta['gerador_id'] != usuario['id']:
         return redirect(url_for('listagem_ofertas_page', erro="Oferta não encontrada ou acesso negado."))
-        
     return render_template('edicaoProduto.html', usuario=usuario, oferta=oferta, oferta_id=oferta_id)
-
 @app.route('/historico', methods=['GET'])
 def historico_page():
     if not obter_usuario_logado():
         return redirect(url_for('login_page'))
-    
     usuario = obter_usuario_logado()
     historico = obter_historico_transacoes(usuario['id'], usuario['tipo'])
-    
     return render_template('historicoDeCompras.html', usuario=usuario, historico=historico)
-
 @app.route('/api/login', methods=['POST'])
 def api_login():
     email = request.form.get('email')
@@ -105,12 +86,10 @@ def api_login():
         return redirect(url_for('listagem_ofertas_page'))
     else:
         return render_template('loginUsuario.html', erro="E-mail ou senha inválidos. Tente novamente.")
-
 @app.route('/api/logout', methods=['GET'])
 def api_logout():
     session.pop('usuario_ativo', None)
     return redirect(url_for('index'))
-
 @app.route('/api/cadastro_usuario', methods=['POST'])
 def api_cadastro_usuario():
     try:
@@ -125,22 +104,17 @@ def api_cadastro_usuario():
         return render_template('cadastrarUsuario.html', erro=f"Erro no cadastro: {str(e)}")
     except Exception as e:
         return render_template('cadastrarUsuario.html', erro=f"Erro inesperado: {str(e)}")
-
 @app.route('/api/cadastro_oferta', methods=['POST'])
 @requer_perfil('Gerador')
 def api_cadastro_oferta():
     usuario = obter_usuario_logado()
     if not usuario:
         return redirect(url_for('login_page', erro="Faça login para cadastrar uma oferta."))
-    
     caminhos_imagens = []
-    
     files = request.files.getlist('imagens')
-    
     for i, file in enumerate(files):
         if i >= 3: 
             break
-            
         if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             
@@ -152,10 +126,8 @@ def api_cadastro_oferta():
                 caminhos_imagens.append(f"img/ofertas/{unique_filename}")
             except Exception as e:
                 return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro ao salvar arquivo: {str(e)}")
-
         elif file.filename != '':
              return render_template('cadastrarProduto.html', usuario=usuario, erro="Formato de arquivo não permitido. Use PNG, JPG ou GIF.")
-
     try:
         gerador_id = usuario['id']
         titulo = request.form['titulo']
@@ -163,75 +135,56 @@ def api_cadastro_oferta():
         quantidade = request.form['quantidade']
         valor_de_venda = request.form['valor_de_venda']
         cidade = request.form['cidade']
-        
         criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade, caminhos_imagens)
-        
         return redirect(url_for('listagem_ofertas_page', sucesso="Oferta publicada com sucesso!"))
     except ValueError as e:
         return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro de Validação: {str(e)}")
     except Exception as e:
         return render_template('cadastrarProduto.html', usuario=usuario, erro=f"Erro inesperado: {str(e)}")
-
-# ROTA POST: Processa o formulário de edição/atualização
 @app.route('/api/edicao_oferta/<oferta_id>', methods=['POST'])
 @requer_perfil('Gerador')
 def api_edicao_oferta(oferta_id):
     usuario = obter_usuario_logado()
-    
     novos_dados = {
         'titulo': request.form.get('titulo'),
         'descricao': request.form.get('descricao'),
         'quantidade': request.form.get('quantidade'),
         'valor_de_venda': request.form.get('valor_de_venda')
     }
-    
     try:
         editar_oferta_servico(oferta_id, usuario['id'], novos_dados)
-        
         return redirect(url_for('listagem_ofertas_page', sucesso="Oferta atualizada com sucesso!"))
     except PermissionError:
         return redirect(url_for('listagem_ofertas_page', erro="Erro de permissão ou oferta não encontrada."))
     except Exception as e:
         oferta = obter_oferta_por_id(oferta_id)
         return render_template('edicaoProduto.html', usuario=usuario, oferta=oferta, erro=f"Erro ao salvar: {str(e)}")
-
-# ROTA POST: Deleta/Remove uma oferta
 @app.route('/api/deletar_oferta/<oferta_id>', methods=['POST'])
 @requer_perfil('Gerador')
 def api_deletar_oferta(oferta_id):
     usuario = obter_usuario_logado()
-    
     try:
         sucesso, mensagem = deletar_oferta_servico(oferta_id, usuario['id'])
-        
         if sucesso:
             return redirect(url_for('listagem_ofertas_page', sucesso=f"Oferta {oferta_id} removida com sucesso! ({mensagem})"))
-        
     except PermissionError:
         return redirect(url_for('listagem_ofertas_page', erro="Erro de permissão ao tentar deletar a oferta."))
     except Exception as e:
         return redirect(url_for('listagem_ofertas_page', erro=f"Erro ao deletar a oferta: {str(e)}"))
-
 @app.route('/api/ofertas/comprar/<oferta_id>', methods=['POST'])
 def api_compra_oferta(oferta_id):
     usuario = obter_usuario_logado()
     if not usuario:
         return redirect(url_for('login_page', erro="Você precisa estar logado para finalizar uma compra."))
-
     if usuario.get('tipo') != 'Receptor':
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro="Apenas usuários Receptores podem realizar esta transação."))
-
     try:
         quantidade_str = request.form['quantidade_desejada']
         quantidade_desejada = float(quantidade_str)
-        
         if quantidade_desejada <= 0:
             raise ValueError("A quantidade deve ser maior que zero.")
-
         comprador_id = usuario['id']
-        
         resultado = transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada)
-        
         if resultado['status'] == 'Removida':
              return redirect(url_for('listagem_ofertas_page', sucesso=f"Compra de {quantidade_desejada} Kg realizada! Oferta foi esgotada."))
         
@@ -239,30 +192,21 @@ def api_compra_oferta(oferta_id):
 
     except ValueError as e:
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro de Validação: {str(e)}"))
-    
     except Exception as e:
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro inesperado no servidor: {str(e)}"))
-
-
 @app.route('/api/ofertas/ativas', methods=['GET'])
 def api_listar_ofertas():
     ofertas = obter_todas_ofertas_ativas()
     return jsonify(ofertas)
-
 @app.route('/ofertas/minhas', methods=['GET'])
 @requer_perfil('Gerador')
 def minhas_ofertas_page():
     usuario = obter_usuario_logado()
     if not usuario:
         return redirect(url_for('login_page'))
-    
-    # Busca as ofertas que pertencem a este Gerador
     minhas_ofertas = obter_ofertas_por_gerador_id(usuario['id'])
-    
     sucesso = request.args.get('sucesso')
     erro = request.args.get('erro')
-
-    # Note: O template que vamos criar é 'minhasOfertas.html'
     return render_template('minhasOfertas.html', 
                            usuario=usuario, 
                            ofertas=minhas_ofertas,
