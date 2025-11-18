@@ -103,10 +103,10 @@ def deletar_oferta_servico(oferta_id, gerador_id):
         oferta['status'] = 'Removida'
         save_data(dados_ofertas, OFERTAS_FILE)
         return True, "Oferta marcada como 'Removida' (histórico preservado)."
-    else:
-        del dados_ofertas[oferta_id]
-        save_data(dados_ofertas, OFERTAS_FILE)
-        return True, "Oferta excluída permanentemente."
+    del dados_ofertas[oferta_id]
+    save_data(dados_ofertas, OFERTAS_FILE)
+    return True, "Oferta excluída permanentemente."
+
 def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
     dados_ofertas = load_data(OFERTAS_FILE)
     oferta = dados_ofertas.get(oferta_id)

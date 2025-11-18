@@ -1,6 +1,22 @@
+# Python
 __pycache__/
 *.pyc
+
+# Virtual Environment
 venv/
 .venv/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables
+.env
+
+# IDE / Editor
 .vscode/
 .DS_Store
+
+# Log files
+*.log
