@@ -6,7 +6,6 @@ from modelos import *
 def obter_todos_usuarios():
     dados_usuarios = load_data(USUARIOS_FILE)
     return list(dados_usuarios.values())
-
 def autenticar_usuario(email, senha):
     dados_usuarios = load_data(USUARIOS_FILE)
     for usuario in dados_usuarios.values():
@@ -15,21 +14,18 @@ def autenticar_usuario(email, senha):
             usuario_limpo.pop('senha', None)
             return usuario_limpo
     return None
-
 def obter_usuario_por_email(email):
     dados_usuarios = load_data(USUARIOS_FILE)
     for usuario in dados_usuarios.values():
         if usuario.get('email', '') == email:
             return usuario
     return None
-
 def obter_usuario_por_credencial(input_busca):
     dados_usuarios = load_data(USUARIOS_FILE)
     for usuario in dados_usuarios.values():
         if input_busca == usuario.get('id') or input_busca.lower() == usuario.get('nome', '').lower():
             return usuario
     return None
-
 def criar_usuario_servico(nome, tipo, cidade, email, senha):
     if tipo not in ['Gerador', 'Receptor']:
         raise ValueError("Tipo de usuário inválido.")
@@ -37,16 +33,13 @@ def criar_usuario_servico(nome, tipo, cidade, email, senha):
         raise ValueError("Este E-mail já está cadastrado.")
     novo = novo_usuario(nome, tipo, cidade, email, senha)
     return salvar_novo_usuario(novo)
-
 def obter_todas_ofertas_ativas():
     dados_ofertas = load_data(OFERTAS_FILE)
     ofertas_ativas = [oferta for oferta in dados_ofertas.values() if oferta.get('status') == 'Ativa']
     return ofertas_ativas
-
 def obter_oferta_por_id(oferta_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     return dados_ofertas.get(oferta_id)
-
 def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade, imagens=None):
     if not all([titulo, descricao, quantidade, valor_de_venda]):
         raise ValueError("Campos obrigatórios faltando.")
@@ -65,7 +58,6 @@ def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_ven
     )
     nova['valor_de_venda'] = str(valor_de_venda)
     return salvar_nova_oferta(nova)
-
 def editar_oferta_servico(oferta_id, gerador_id, novos_dados):
     dados_ofertas = load_data(OFERTAS_FILE)
     oferta = dados_ofertas.get(oferta_id)
@@ -93,7 +85,6 @@ def editar_oferta_servico(oferta_id, gerador_id, novos_dados):
         oferta['status'] = 'Ativa'
     save_data(dados_ofertas, OFERTAS_FILE)
     return oferta
-
 def deletar_oferta_servico(oferta_id, gerador_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     oferta = dados_ofertas.get(oferta_id)
@@ -137,7 +128,6 @@ def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
         'restante': nova_quantidade_disponivel, 
         'status': oferta['status']
     }
-
 def obter_historico_transacoes(user_id, user_tipo):
     dados_ofertas = load_data(OFERTAS_FILE)
     dados_usuarios = load_data(USUARIOS_FILE)
@@ -163,3 +153,11 @@ def obter_historico_transacoes(user_id, user_tipo):
                     transacao['tipo'] = 'Compra'
                     historico.append(transacao)
     return historico
+def obter_ofertas_por_gerador_id(gerador_id):
+    dados_ofertas = load_data(OFERTAS_FILE)
+    ofertas_do_gerador = [
+        oferta 
+        for oferta in dados_ofertas.values() 
+        if oferta.get('gerador_id') == gerador_id
+    ]
+    return ofertas_do_gerador

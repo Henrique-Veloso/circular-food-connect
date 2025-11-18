@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - Circular Food Conect</title>
+    <title>Catálogo - Circular Food Conect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
+    
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
             <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
@@ -20,18 +24,22 @@
                     <span class="text-orange-500">Circular Food</span> <span class="text-green-600">Conect</span>
                 </span>
             </a>
+            
             <nav class="flex items-center space-x-4">
-                <a href="{{ url_for('listagem_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Ofertas Ativas</a>
+                <a href="{{ url_for('listagem_ofertas_page') }}" class="text-sm font-medium text-green-600 hover:text-green-700 border-b-2 border-green-600 pb-1">Ofertas Ativas</a>
                 {% if usuario %}
-                    <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
                     {% if usuario.tipo == 'Gerador' %}
+                        <a href="{{ url_for('minhas_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-orange-700">Minhas Ofertas</a>
+                        <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
                         <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
                             + Anunciar
                         </a>
+                    {% else %}
+                        <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
                     {% endif %}
                     <a href="{{ url_for('api_logout') }}" class="text-sm font-medium text-red-600 hover:text-red-700">Sair ({{ usuario.nome }})</a>
                 {% else %}
-                    <a href="{{ url_for('login_page') }}" class="text-sm font-medium text-green-600 hover:text-green-500">Entrar</a>
+                    <a href="{{ url_for('login_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Entrar</a>
                     <a href="{{ url_for('cadastro_page') }}" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 shadow-md transition-colors duration-200">
                         Cadastre-se
                     </a>
@@ -39,42 +47,83 @@
             </nav>
         </div>
     </header>
-    <main class="flex-grow container mx-auto p-4 mt-16">
-        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-8 text-center">
-            <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                <span class="text-green-600">Conecte-se</span> ao futuro alimentar circular.
-            </h1>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Na Circular Food Conect, transformamos o excedente de alimentos e coprodutos em novas matérias-primas, de forma rápida, segura e sustentável.
-            </p>
-            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6 pt-4">
-                <a href="{{ url_for('listagem_ofertas_page') }}" class="w-full md:w-auto flex justify-center py-3 px-8 border border-transparent rounded-lg shadow-md text-base font-medium text-white 
-                   bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                    Ver Ofertas Ativas
-                </a>
-                {% if not usuario %}
-                <a href="{{ url_for('cadastro_page') }}" class="w-full md:w-auto flex justify-center py-3 px-8 border border-green-600 rounded-lg shadow-md text-base font-medium text-green-600 
-                   bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                    Quero me Cadastrar
-                </a>
-                {% endif %}
+    
+    <main class="flex-grow container mx-auto p-4 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Explore Matérias-Primas Circulares</h1>
+                <p class="text-lg text-gray-600">Encontre subprodutos e excedentes de alta qualidade na sua região.</p>
             </div>
-            <div class="pt-8 border-t border-gray-100 grid grid-cols-3 gap-4">
-                <div>
-                    <p class="text-4xl font-bold text-orange-500">10T+</p>
-                    <p class="text-sm text-gray-500">Resíduos Reaproveitados</p>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-8 flex space-x-4 max-w-4xl mx-auto">
+                <input type="text" placeholder="Buscar por Título ou Descrição..."
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500">
+                <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    <option value="">Todas as Cidades</option>
+                    <option value="Recife">Recife</option>
+                </select>
+                <button class="bg-green-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    Buscar
+                </button>
+            </div>
+            
+            <div id="lista-ofertas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for oferta in ofertas %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:scale-[1.02]">
+                    <div class="w-full h-36 bg-gray-200 flex items-center justify-center text-center">
+                        {% set img_url = '/static/' + oferta.imagens[0] if oferta.imagens and oferta.imagens[0] else 'https://placehold.co/400x300/10B981/ffffff?text=' + oferta.titulo | replace(' ', '+') %}
+                        <img src="{{ img_url }}" alt="{{ oferta.titulo }}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-orange-100 text-orange-600 mb-2 block w-max">
+                            R$ {{ oferta.valor_de_venda }} / Kg
+                        </span>
+                        <h2 class="text-lg font-bold text-gray-900 truncate mb-1">{{ oferta.titulo }}</h2>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ oferta.descricao }}</p>
+                        
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {{ oferta.localizacao }}
+                            </span>
+                            
+                            {% if oferta.quantidade | float > 0 %}
+                                <span class="font-bold text-green-600">{{ oferta.quantidade }} Kg</span>
+                            {% else %}
+                                <span class="font-bold text-red-600">Esgotado</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if oferta.quantidade | float > 0 %}
+                            <a href="{{ url_for('comprar_produto_page', oferta_id=oferta.id) }}" class="mt-4 w-full block text-center py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                                Ver Detalhes
+                            </a>
+                        {% else %}
+                            <button disabled class="mt-4 w-full block text-center py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                                Esgotado
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
-                <div>
-                    <p class="text-4xl font-bold text-green-600">40+</p>
-                    <p class="text-sm text-gray-500">Parceiros Conectados</p>
+                {% endfor %} 
+                
+                {% if not ofertas %}
+                <div class="text-center py-12 col-span-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 class="mt-2 text-xl font-medium text-gray-900">Nenhuma Oferta Ativa</h3>
+                    <p class="mt-1 text-sm text-gray-500">Comece a usar a plataforma cadastrando ou logando para explorar.</p>
                 </div>
-                <div>
-                    <p class="text-4xl font-bold text-orange-500">100%</p>
-                    <p class="text-sm text-gray-500">Impacto Sustentável</p>
-                </div>
+                {% endif %}
             </div>
         </div>
     </main>
+    
     <footer class="mt-10 mb-10 text-center text-xs text-gray-500">
         Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
         <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect

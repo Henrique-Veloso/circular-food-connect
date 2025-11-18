@@ -3,7 +3,7 @@
         "gerador_id": "1",
         "titulo": "Borra de Caf\u00e9",
         "descricao": "Borras de caf\u00e9 ressacado em sacos para compostagem.",
-        "quantidade": "40.0",
+        "quantidade": "100.0",
         "localizacao": "Recife / PE",
         "laudo_link": null,
         "imagens": [
@@ -13,13 +13,18 @@
         ],
         "status": "Ativa",
         "timestamp_cadastro": 1763421164,
-        "valor_de_venda": "15",
+        "valor_de_venda": "20.0",
         "id": "1",
         "historico_compras": [
             {
                 "comprador_id": "2",
                 "quantidade": 30.0,
                 "timestamp": 1763421694
+            },
+            {
+                "comprador_id": "2",
+                "quantidade": 20.0,
+                "timestamp": 1763431799
             }
         ]
     }
