@@ -3,10 +3,10 @@ from servicos import *
 import os
 from werkzeug.utils import secure_filename
 import time
-
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'web'))
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'super_secret_key_cfc_2025'
+
 UPLOAD_FOLDER = os.path.join(template_dir, 'img', 'ofertas')
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -27,20 +27,27 @@ def requer_perfil(tipo: str):
     return decorator
 @app.route('/', methods=['GET'])
 def index():
-    ofertas = obter_todas_ofertas_ativas()
+    ofertas = obter_ofertas_otimizadas() 
     return render_template('index.html', usuario=obter_usuario_logado(), ofertas=ofertas)
 @app.route('/login', methods=['GET'])
 def login_page():
     sucesso = request.args.get('sucesso')
     erro = request.args.get('erro')
-    return render_template('loginUsuario.html', sucesso=sucesso, erro=erro)
+    action = request.args.get('action') 
+    return render_template('loginUsuario.html', sucesso=sucesso, erro=erro, action=action)
 @app.route('/cadastro', methods=['GET'])
 def cadastro_page():
     return render_template('cadastrarUsuario.html')
 @app.route('/ofertas/listagem', methods=['GET'])
 def listagem_ofertas_page():
-    ofertas = obter_todas_ofertas_ativas()
-    return render_template('listaDeProdutos.html', usuario=obter_usuario_logado(), ofertas=ofertas)
+    ofertas = obter_ofertas_otimizadas()
+    login_success = request.args.get('login_success')
+    user_id = request.args.get('user_id')
+    return render_template('listaDeProdutos.html', 
+                           usuario=obter_usuario_logado(), 
+                           ofertas=ofertas,
+                           login_success=login_success,
+                           user_id=user_id)
 @app.route('/ofertas/cadastro', methods=['GET'])
 @requer_perfil('Gerador')
 def cadastro_oferta_page():
@@ -83,13 +90,13 @@ def api_login():
     usuario = autenticar_usuario(email, senha)
     if usuario:
         session['usuario_ativo'] = usuario
-        return redirect(url_for('listagem_ofertas_page'))
+        return redirect(url_for('listagem_ofertas_page', login_success='true', user_id=usuario['id'])) 
     else:
         return render_template('loginUsuario.html', erro="E-mail ou senha inválidos. Tente novamente.")
 @app.route('/api/logout', methods=['GET'])
 def api_logout():
     session.pop('usuario_ativo', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login_page', action='logout', sucesso="Você saiu da sua conta."))
 @app.route('/api/cadastro_usuario', methods=['POST'])
 def api_cadastro_usuario():
     try:
@@ -117,10 +124,8 @@ def api_cadastro_oferta():
             break
         if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            
             unique_filename = f"{usuario['id']}_{int(time.time())}_{i}_{filename}"
             file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
-            
             try:
                 file.save(file_path)
                 caminhos_imagens.append(f"img/ofertas/{unique_filename}")
@@ -187,9 +192,7 @@ def api_compra_oferta(oferta_id):
         resultado = transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada)
         if resultado['status'] == 'Removida':
              return redirect(url_for('listagem_ofertas_page', sucesso=f"Compra de {quantidade_desejada} Kg realizada! Oferta foi esgotada."))
-        
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, sucesso=f"Compra de {quantidade_desejada} Kg realizada com sucesso! Restam {resultado['restante']} Kg."))
-
     except ValueError as e:
         return redirect(url_for('comprar_produto_page', oferta_id=oferta_id, erro=f"Erro de Validação: {str(e)}"))
     except Exception as e:
@@ -212,7 +215,6 @@ def minhas_ofertas_page():
                            ofertas=minhas_ofertas,
                            sucesso=sucesso,
                            erro=erro)
-
 if __name__ == '__main__':
     app.static_folder = template_dir
     app.static_url_path = '/static'

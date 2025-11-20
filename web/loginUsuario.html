@@ -105,5 +105,22 @@
             e seus parceiros.
         </footer>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+
+            // Lógica para limpar o local storage na ação de logout
+            if (action === 'logout') {
+                localStorage.removeItem('user_id');
+                console.log('Local storage cleared upon logout.');
+                
+                // Limpa a URL (se houver a flag 'action=logout')
+                const newUrl = window.location.origin + window.location.pathname + window.location.search.replace(/([&?])action=logout/, '$1').replace(/[?&]$/, '');
+                history.replaceState(null, '', newUrl);
+            }
+        });
+    </script>
 </body>
 </html>

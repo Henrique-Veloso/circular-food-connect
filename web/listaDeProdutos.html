@@ -12,6 +12,13 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Classe para esconder elementos filtrados */
+        .oferta-card-wrapper {
+            display: block;
+        }
+        .oferta-card-wrapper.hidden-filtered {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -29,7 +36,6 @@
                 {% if usuario %}
                     {% if usuario.tipo == 'Gerador' %}
                         <a href="{{ url_for('minhas_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-orange-700">Minhas Ofertas</a>
-                        
                         <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
                         <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
                             + Anunciar
@@ -65,50 +71,53 @@
             {% endif %}
 
             <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 flex space-x-4">
-                <input type="text" placeholder="Buscar por Título ou Descrição..."
+                <input type="text" id="search-input" placeholder="Buscar por Título ou Descrição..."
                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500">
-                <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500">
+                <select id="city-select" class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-green-500 focus:border-green-500">
                     <option value="">Todas as Cidades</option>
                     <option value="Recife">Recife</option>
-                </select>
-                <button class="bg-green-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    </select>
+                <button id="search-button" class="bg-green-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                     Buscar
                 </button>
             </div>
+            
             <div id="lista-ofertas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for oferta in ofertas %}
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:scale-[1.02]">
-                    <div class="p-4">
-                        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-orange-100 text-orange-600 mb-2 block w-max">
-                            R$ {{ oferta.valor_de_venda }} / Kg
-                        </span>
-                        <h2 class="text-xl font-semibold text-gray-900 truncate mb-2">{{ oferta.titulo }}</h2>
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ oferta.descricao }}</p>
-                        <div class="flex items-center justify-between text-sm text-gray-500">
-                            <span class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                {{ oferta.localizacao }}
+                <div class="oferta-card-wrapper" data-titulo="{{ oferta.titulo | lower }}" data-descricao="{{ oferta.descricao | lower }}" data-cidade="{{ oferta.localizacao }}">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 hover:shadow-xl hover:scale-[1.02]">
+                        <div class="p-4">
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-orange-100 text-orange-600 mb-2 block w-max">
+                                R$ {{ oferta.valor_de_venda }} / Kg
                             </span>
+                            <h2 class="text-xl font-semibold text-gray-900 truncate mb-2">{{ oferta.titulo }}</h2>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ oferta.descricao }}</p>
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    {{ oferta.localizacao }}
+                                </span>
+                                
+                                {% if oferta.quantidade | float > 0 %}
+                                    <span class="font-bold text-green-600">{{ oferta.quantidade }} Kg</span>
+                                {% else %}
+                                    <span class="font-bold text-red-600">Esgotado</span>
+                                {% endif %}
+                            </div>
                             
                             {% if oferta.quantidade | float > 0 %}
-                                <span class="font-bold text-green-600">{{ oferta.quantidade }} Kg</span>
+                                <a href="{{ url_for('comprar_produto_page', oferta_id=oferta.id) }}" class="mt-4 w-full block text-center py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                                    Ver Detalhes
+                                </a>
                             {% else %}
-                                <span class="font-bold text-red-600">Esgotado</span>
+                                <button disabled class="mt-4 w-full block text-center py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                                    Esgotado
+                                </button>
                             {% endif %}
                         </div>
-                        
-                        {% if oferta.quantidade | float > 0 %}
-                            <a href="{{ url_for('comprar_produto_page', oferta_id=oferta.id) }}" class="mt-4 w-full block text-center py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
-                                Ver Detalhes
-                            </a>
-                        {% else %}
-                            <button disabled class="mt-4 w-full block text-center py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
-                                Esgotado
-                            </button>
-                        {% endif %}
                     </div>
                 </div>
                 {% endfor %} 
@@ -125,6 +134,54 @@
             </div>
         </div>
     </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const citySelect = document.getElementById('city-select');
+            const searchButton = document.getElementById('search-button');
+            const offerWrappers = document.querySelectorAll('.oferta-card-wrapper');
+
+            // Função principal de filtragem
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const selectedCity = citySelect.value.toLowerCase().trim();
+                let matchesFound = 0;
+
+                offerWrappers.forEach(wrapper => {
+                    const title = wrapper.getAttribute('data-titulo');
+                    const description = wrapper.getAttribute('data-descricao');
+                    const city = wrapper.getAttribute('data-cidade').toLowerCase().trim();
+
+                    // 1. Filtro por Texto (Título OU Descrição)
+                    const textMatch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+
+                    // 2. Filtro por Cidade
+                    const cityMatch = !selectedCity || city === selectedCity;
+
+                    if (textMatch && cityMatch) {
+                        wrapper.classList.remove('hidden-filtered');
+                        matchesFound++;
+                    } else {
+                        wrapper.classList.add('hidden-filtered');
+                    }
+                });
+
+                // Lógica para exibir a mensagem "Nenhuma Oferta Ativa" (Se a lista estava vazia originalmente, não faremos nada)
+                const emptyMessage = document.querySelector('.text-center.py-12.col-span-full');
+                if (emptyMessage) {
+                    emptyMessage.style.display = matchesFound > 0 ? 'none' : 'block';
+                }
+            }
+
+            // Adiciona listeners para acionar a filtragem
+            searchButton.addEventListener('click', applyFilters);
+            citySelect.addEventListener('change', applyFilters);
+            // Opcional: Filtro ao digitar no campo de busca (melhor UX)
+            searchInput.addEventListener('keyup', applyFilters);
+        });
+    </script>
+    
     <footer class="mt-10 mb-10 text-center text-xs text-gray-500">
         Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
         <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect

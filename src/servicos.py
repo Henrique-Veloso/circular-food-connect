@@ -1,8 +1,8 @@
 import time
 import datetime
+import math
 from persistencia import *
 from modelos import *
-
 def obter_todos_usuarios():
     dados_usuarios = load_data(USUARIOS_FILE)
     return list(dados_usuarios.values())
@@ -40,6 +40,14 @@ def obter_todas_ofertas_ativas():
 def obter_oferta_por_id(oferta_id):
     dados_ofertas = load_data(OFERTAS_FILE)
     return dados_ofertas.get(oferta_id)
+def obter_ofertas_por_gerador_id(gerador_id):
+    dados_ofertas = load_data(OFERTAS_FILE)
+    ofertas_do_gerador = [
+        oferta 
+        for oferta in dados_ofertas.values() 
+        if oferta.get('gerador_id') == gerador_id
+    ]
+    return ofertas_do_gerador
 def criar_oferta_servico(gerador_id, titulo, descricao, quantidade, valor_de_venda, cidade, imagens=None):
     if not all([titulo, descricao, quantidade, valor_de_venda]):
         raise ValueError("Campos obrigatórios faltando.")
@@ -115,8 +123,7 @@ def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
     oferta['historico_compras'].append({
         'comprador_id': comprador_id,
         'quantidade': quantidade_desejada,
-        'timestamp': int(time.time()),
-        'aceite_termos_timestamp': int(time.time())
+        'timestamp_aceite': int(time.time())
     })
     if nova_quantidade_disponivel <= 0.01:
         oferta['status'] = 'Removida'
@@ -138,14 +145,18 @@ def obter_historico_transacoes(user_id, user_tipo):
             gerador = dados_usuarios.get(oferta['gerador_id'], {'nome': 'Gerador Desconhecido'})
             for compra in oferta['historico_compras']:
                 comprador = dados_usuarios.get(compra['comprador_id'], {'nome': 'Comprador Desconhecido'})
-                data_hora = datetime.datetime.fromtimestamp(compra['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
-                data_aceite = datetime.datetime.fromtimestamp(compra.get('aceite_termos_timestamp', compra['timestamp'])).strftime('%Y-%m-%d %H:%M:%S')
+                compra_timestamp = compra.get('timestamp_aceite')
+                if not compra_timestamp:
+                    compra_timestamp = compra.get('timestamp')
+                if compra_timestamp:
+                    data_hora = datetime.datetime.fromtimestamp(compra_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    data_hora = "Data Indisponível"
                 transacao = {
                     'oferta_id': oferta_id,
                     'titulo': oferta['titulo'],
                     'quantidade': compra['quantidade'],
                     'data': data_hora,
-                    'data_aceite': data_aceite
                 }
                 if user_tipo == 'Gerador' and oferta['gerador_id'] == user_id:
                     transacao['parceiro'] = comprador['nome']
@@ -156,11 +167,12 @@ def obter_historico_transacoes(user_id, user_tipo):
                     transacao['tipo'] = 'Compra'
                     historico.append(transacao)
     return historico
-def obter_ofertas_por_gerador_id(gerador_id):
-    dados_ofertas = load_data(OFERTAS_FILE)
-    ofertas_do_gerador = [
-        oferta 
-        for oferta in dados_ofertas.values() 
-        if oferta.get('gerador_id') == gerador_id
-    ]
-    return ofertas_do_gerador
+def obter_ofertas_otimizadas():
+    ofertas_ativas = obter_todas_ofertas_ativas()
+    def get_sort_key(oferta):
+        try:
+            return float(oferta.get('valor_de_venda', 999999.0)) 
+        except ValueError:
+            return 999999.0
+    ofertas_otimizadas = sorted(ofertas_ativas, key=get_sort_key)
+    return ofertas_otimizadas

@@ -54,6 +54,7 @@
                 {% if usuario %}
                     <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
                     {% if usuario.tipo == 'Gerador' %}
+                        <a href="{{ url_for('minhas_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-orange-700">Minhas Ofertas</a>
                         <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
                             + Anunciar
                         </a>
@@ -181,10 +182,10 @@
                                     </p>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 shadow-lg text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="submitBtn">
+                            <button type="submit" class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 shadow-lg text-lg transition-colors" id="submitBtn">
                                 Finalizar Compra
                             </button>
-                            <button type="button" class="w-full bg-white text-orange-600 font-semibold py-3 rounded-lg hover:bg-orange-50 border-2 border-orange-600 text-lg transition-colors">
+                            <button type="button" onclick="simularChat('{{ gerador.email }}')" class="w-full bg-white text-orange-600 font-semibold py-3 rounded-lg hover:bg-orange-50 border-2 border-orange-600 text-lg transition-colors">
                                 Contatar Gerador (Chat)
                             </button>
                         </form>
@@ -211,7 +212,7 @@
                             </div>
                         </div>
                         <p class="text-xs text-gray-500 mb-4">Reputação baseada em transações</p>
-                        <a href="#" class="w-full block text-center py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 text-sm">
+                        <a href="{{ url_for('historico_page') }}" class="w-full block text-center py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 text-sm">
                             Ver Histórico Completo
                         </a>
                     </div>
@@ -299,7 +300,8 @@
                 termsModal.classList.remove('hidden');
             }
         }
-
+        
+        // Listeners para abrir e fechar o modal
         if (openTermsUso) {
             openTermsUso.addEventListener('click', openTermsModal);
         }
@@ -318,6 +320,11 @@
 
         if (termsBackdrop) {
             termsBackdrop.addEventListener('click', closeTermsModal);
+        }
+        
+        // NOVO: Função para simular o contato (Chat)
+        function simularChat(email) {
+            alert("Simulação de Chat: Entre em contato com o Gerador via E-mail para negociar.\nE-mail do Gerador: " + email);
         }
     </script>
     <footer class="mt-10 mb-10 text-center text-xs text-gray-500">

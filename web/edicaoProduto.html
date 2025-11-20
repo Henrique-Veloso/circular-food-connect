@@ -30,12 +30,11 @@
             <nav class="flex items-center space-x-4">
                 <a href="{{ url_for('listagem_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Ofertas Ativas</a>
                 {% if usuario %}
+                    <a href="{{ url_for('minhas_ofertas_page') }}" class="text-sm font-medium text-gray-700 hover:text-orange-700">Minhas Ofertas</a>
                     <a href="{{ url_for('historico_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Histórico</a>
-                    {% if usuario.tipo == 'Gerador' %}
-                        <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
-                            + Anunciar
-                        </a>
-                    {% endif %}
+                    <a href="{{ url_for('cadastro_oferta_page') }}" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 shadow-md transition-colors duration-200">
+                        + Anunciar
+                    </a>
                     <a href="{{ url_for('api_logout') }}" class="text-sm font-medium text-red-600 hover:text-red-700">Sair ({{ usuario.nome }})</a>
                 {% else %}
                     <a href="{{ url_for('login_page') }}" class="text-sm font-medium text-gray-700 hover:text-green-600">Entrar</a>
@@ -51,12 +50,7 @@
         <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl mt-8 mb-8 space-y-8">
             <h1 class="text-3xl font-bold text-gray-900 text-center">Editar Oferta #{{ oferta.id }}</h1>
             
-            {% if erro %}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <p class="font-bold">Erro ao salvar:</p>
-                    <p class="text-sm">{{ erro }}</p>
-                </div>
-            {% endif %}
+            <div id="feedback-message" class="hidden p-3 text-sm text-center font-medium rounded-lg"></div>
 
             <div class="flex items-center justify-between text-sm text-gray-600 pb-4 border-b border-gray-200">
                 <div class="flex items-center font-medium">
@@ -66,7 +60,7 @@
                 </div>
             </div>
 
-            <form class="space-y-6" action="{{ url_for('api_edicao_oferta', oferta_id=oferta.id) }}" method="POST">
+            <form id="edicao-form" class="space-y-6" action="{{ url_for('api_edicao_oferta', oferta_id=oferta.id) }}" method="POST">
 
                 <div>
                     <label for="titulo" class="block text-sm font-medium text-gray-700">Título da Oferta *</label>
@@ -107,7 +101,7 @@
                 </div>
 
                 <div class="flex items-center justify-end pt-4 border-t border-gray-200">
-                    <button type="submit"
+                    <button type="submit" id="submit-button-edicao"
                         class="w-auto flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
                                bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
                                focus:ring-green-500 transition-colors duration-200">
@@ -132,6 +126,60 @@
 
         </div>
     </main>
+    
+    <script>
+        document.getElementById('edicao-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const feedback = document.getElementById('feedback-message');
+            const submitButton = document.getElementById('submit-button-edicao');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Salvando...';
+
+            const showFeedback = (message, isError) => {
+                feedback.textContent = message;
+                feedback.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+                if (isError) {
+                    feedback.classList.add('bg-red-100', 'text-red-700');
+                } else {
+                    feedback.classList.add('bg-green-100', 'text-green-700');
+                }
+                feedback.classList.remove('hidden');
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                });
+
+                if (response.redirected) {
+                    // Sucesso: Redireciona para a página de listagem de ofertas
+                    window.location.href = response.url;
+                } else {
+                    // Falha (Erro de permissão ou validação no Flask): Flask re-renderiza o template com o erro
+                    const errorHtml = await response.text();
+
+                    // Recarregamos o DOM com o HTML de erro para exibir a mensagem corretamente
+                    document.open();
+                    document.write(errorHtml);
+                    document.close();
+                }
+
+            } catch (error) {
+                showFeedback('Erro de rede. Falha ao conectar com o servidor.', true);
+                console.error('Erro no Fetch:', error);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Salvar Alterações';
+            }
+        });
+    </script>
 
     <footer class="mt-auto bg-white border-t border-gray-200">
         <div class="max-w-7xl mx-auto py-8 px-4 text-center text-xs text-gray-500">

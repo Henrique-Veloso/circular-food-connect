@@ -4,26 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Circular Food Conect</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Define a fonte Inter como padrão */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
 <body class="h-full bg-gray-100">
-    <header class="bg-white shadow-sm">
+
+    <header class="w-full bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto p-4">
             <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
-                <img src="/static/img/logo.png" alt="Logo" class="h-10 w-auto">
+                
+                <img src="/static/img/logo.png" alt="Logo Circular Food Conect" class="h-10 w-auto">
+                
                 <span class="text-2xl font-bold text-gray-800">
                     <span class="text-orange-500">Circular Food</span> <span class="text-green-600">Conect</span>
                 </span>
             </a>
         </div>
     </header>
+
     <div class="flex flex-col items-center justify-center min-h-full w-full p-4">
+        
         <div class="max-w-sm w-full bg-white rounded-2xl shadow-xl p-8 space-y-8 mt-16 mb-16">
+            
             <div class="text-center">
                 <h2 class="text-2xl tracking-tight text-gray-900">
                     Crie sua conta
@@ -32,7 +45,11 @@
                     Rápido e fácil, vamos começar!
                 </p>
             </div>
-            <form class="space-y-6" action="{{ url_for('api_cadastro_usuario') }}" method="POST">
+
+            <div id="feedback-message" class="hidden p-3 text-sm text-center font-medium rounded-lg"></div>
+
+            <form id="cadastro-form" class="space-y-6" action="{{ url_for('api_cadastro_usuario') }}" method="POST">
+                
                 <div>
                     <label for="nome" class="block text-sm font-medium text-gray-700">
                         Seu nome completo
@@ -44,6 +61,7 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
+
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">
                         E-mail
@@ -55,6 +73,7 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
+
                 <div>
                     <label for="senha" class="block text-sm font-medium text-gray-700">
                         Senha
@@ -66,6 +85,7 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
+
                 <div>
                     <label for="cidade" class="block text-sm font-medium text-gray-700">
                         Cidade
@@ -77,6 +97,7 @@
                                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                 </div>
+
                 <div>
                     <label for="tipo" class="block text-sm font-medium text-gray-700">
                         Eu sou
@@ -91,6 +112,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div>
                     <button type="submit"
                             class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
@@ -100,6 +122,7 @@
                     </button>
                 </div>
             </form>
+
             <div class="space-y-4 text-center text-sm">
                 <p class="text-gray-600">
                     Já tem uma conta?
@@ -108,7 +131,9 @@
                     </a>
                 </p>
             </div>
+
         </div>
+
         <footer class="mt-10 mb-10 text-center text-xs text-gray-500 max-w-sm">
             Ao continuar, você concorda com os <a href="#" class="underline">Termos de Uso</a> e
             <a href="#" class="underline">Política de Privacidade</a> da Circular Food Conect
@@ -116,5 +141,52 @@
         </footer>
     </div>
 
+    <script>
+        document.getElementById('cadastro-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const feedback = document.getElementById('feedback-message');
+            
+            // Função para exibir mensagem de feedback
+            const showFeedback = (message, isError) => {
+                feedback.textContent = message;
+                feedback.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+                if (isError) {
+                    feedback.classList.add('bg-red-100', 'text-red-700');
+                } else {
+                    feedback.classList.add('bg-green-100', 'text-green-700');
+                }
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    // Garante que o fetch API siga o redirect do Flask para a página de login
+                    redirect: 'follow'
+                });
+
+                if (response.redirected) {
+                    // O Flask redireciona para a página de login com a mensagem de sucesso na URL.
+                    window.location.href = response.url;
+                } else {
+                    // Se não houve redirect, o Flask re-renderizou o template com erro.
+                    const errorHtml = await response.text();
+
+                    // Recarregamos o DOM com o HTML de erro para exibir a mensagem.
+                    document.open();
+                    document.write(errorHtml);
+                    document.close();
+                }
+
+            } catch (error) {
+                showFeedback('Erro de rede. Verifique sua conexão e tente novamente.', true);
+                console.error('Erro no Fetch:', error);
+            }
+        });
+    </script>
 </body>
 </html>
