@@ -164,7 +164,17 @@
                                        class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm
                                               focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                             </div>
-                            <button type="submit" class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 shadow-lg text-lg mb-2 transition-colors">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="aceite_termos" name="aceite_termos" type="checkbox" required
+                                           class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="aceite_termos" class="font-medium text-gray-700">Li e aceito os Termos de Uso</label>
+                                    <p class="text-gray-500">Ao marcar esta caixa, você concorda com nossos <a href="#" class="text-green-600 hover:text-green-800">Termos de Uso</a> e <a href="#" class="text-green-600 hover:text-green-800">Política de Privacidade</a>.</p>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 shadow-lg text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="submitBtn">
                                 Finalizar Compra
                             </button>
                             <button type="button" class="w-full bg-white text-orange-600 font-semibold py-3 rounded-lg hover:bg-orange-50 border-2 border-orange-600 text-lg transition-colors">

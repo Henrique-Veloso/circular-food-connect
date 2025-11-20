@@ -115,7 +115,8 @@ def transacao_compra_servico(oferta_id, comprador_id, quantidade_desejada):
     oferta['historico_compras'].append({
         'comprador_id': comprador_id,
         'quantidade': quantidade_desejada,
-        'timestamp': int(time.time())
+        'timestamp': int(time.time()),
+        'aceite_termos_timestamp': int(time.time())
     })
     if nova_quantidade_disponivel <= 0.01:
         oferta['status'] = 'Removida'
@@ -138,11 +139,13 @@ def obter_historico_transacoes(user_id, user_tipo):
             for compra in oferta['historico_compras']:
                 comprador = dados_usuarios.get(compra['comprador_id'], {'nome': 'Comprador Desconhecido'})
                 data_hora = datetime.datetime.fromtimestamp(compra['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+                data_aceite = datetime.datetime.fromtimestamp(compra.get('aceite_termos_timestamp', compra['timestamp'])).strftime('%Y-%m-%d %H:%M:%S')
                 transacao = {
                     'oferta_id': oferta_id,
                     'titulo': oferta['titulo'],
                     'quantidade': compra['quantidade'],
-                    'data': data_hora
+                    'data': data_hora,
+                    'data_aceite': data_aceite
                 }
                 if user_tipo == 'Gerador' and oferta['gerador_id'] == user_id:
                     transacao['parceiro'] = comprador['nome']
