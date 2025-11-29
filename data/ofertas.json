@@ -2,8 +2,8 @@
     "1": {
         "gerador_id": "1",
         "titulo": "Borra de Caf\u00e9",
-        "descricao": "Borras de caf\u00e9 ressacado em sacos para compostagem.",
-        "quantidade": "100.0",
+        "descricao": "Borras de caf\u00e9 laranja ressacado em sacos para compostagem.",
+        "quantidade": "800.0",
         "localizacao": "Recife / PE",
         "laudo_link": null,
         "imagens": [
@@ -13,7 +13,7 @@
         ],
         "status": "Ativa",
         "timestamp_cadastro": 1763421164,
-        "valor_de_venda": "20.0",
+        "valor_de_venda": "320.0",
         "id": "1",
         "historico_compras": [
             {
@@ -25,7 +25,92 @@
                 "comprador_id": "2",
                 "quantidade": 20.0,
                 "timestamp": 1763431799
+            },
+            {
+                "comprador_id": "2",
+                "quantidade": 200.0,
+                "timestamp_aceite": 1763819011
+            },
+            {
+                "comprador_id": "2",
+                "quantidade": 50.0,
+                "timestamp_aceite": 1764417318
             }
         ]
+    },
+    "2": {
+        "gerador_id": "3",
+        "titulo": "Melancia",
+        "descricao": "Casca de melancia",
+        "quantidade": "100",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/3_1764416728_0_fotolia-84737670-subscription-monthly-m.png"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1764416728,
+        "valor_de_venda": "35",
+        "id": "2"
+    },
+    "3": {
+        "gerador_id": "3",
+        "titulo": "Pera",
+        "descricao": "Pera ressecada",
+        "quantidade": "50",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/3_1764416759_0_images.png"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1764416759,
+        "valor_de_venda": "10",
+        "id": "3"
+    },
+    "4": {
+        "gerador_id": "3",
+        "titulo": "Casca de Ma\u00e7a",
+        "descricao": "Casca ressecada",
+        "quantidade": "150",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/3_1764416799_0_istockphoto-184276818-612x612.png"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1764416799,
+        "valor_de_venda": "19",
+        "id": "4"
+    },
+    "5": {
+        "gerador_id": "1",
+        "titulo": "Morango",
+        "descricao": "sobras de morango espremido",
+        "quantidade": "150",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/1_1764416852_0_images_1.png"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1764416852,
+        "valor_de_venda": "50",
+        "id": "5"
+    },
+    "6": {
+        "gerador_id": "1",
+        "titulo": "Sementes de melancia",
+        "descricao": "apenas semente",
+        "quantidade": "15",
+        "localizacao": "Recife",
+        "laudo_link": null,
+        "imagens": [
+            "img/ofertas/1_1764417011_0_fotolia-84737670-subscription-monthly-m.png"
+        ],
+        "status": "Ativa",
+        "timestamp_cadastro": 1764417011,
+        "valor_de_venda": "10",
+        "id": "6"
     }
 }

@@ -30,7 +30,7 @@ MOCK_OFERTAS = {
         "id": "1",
         "titulo": "Tomates",
         "descricao": "Tomates frescos da horta.",
-        "quantidade": "5.0", # 5.0 kg disponíveis
+        "quantidade": "5.0",
         "status": "Ativa",
         "historico_compras": [
             {
@@ -43,22 +43,16 @@ MOCK_OFERTAS = {
 
 @patch('servicos.load_data')
 def test_autenticar_usuario_sucesso(mock_load_data):
-    """
-    Testa se um usuário consegue se autenticar com credenciais corretas.
-    """
     mock_load_data.return_value = MOCK_USUARIOS
 
     usuario = autenticar_usuario("receptor@exemplo.com", "senha123")
 
     assert usuario is not None
     assert usuario['email'] == "receptor@exemplo.com"
-    assert 'senha' not in usuario  # Garante que a senha foi removida
+    assert 'senha' not in usuario
 
 @patch('servicos.load_data')
 def test_autenticar_usuario_falha(mock_load_data):
-    """
-    Testa se a autenticação falha com uma senha incorreta.
-    """
     mock_load_data.return_value = MOCK_USUARIOS
 
     usuario = autenticar_usuario("receptor@exemplo.com", "senha_errada")
@@ -68,10 +62,7 @@ def test_autenticar_usuario_falha(mock_load_data):
 @patch('servicos.salvar_novo_usuario')
 @patch('servicos.obter_usuario_por_email')
 def test_criar_usuario_servico_sucesso(mock_obter_por_email, mock_salvar_novo_usuario):
-    """
-    Testa a criação de um novo usuário com sucesso.
-    """
-    mock_obter_por_email.return_value = None  # Simula que o email não existe
+    mock_obter_por_email.return_value = None
     mock_salvar_novo_usuario.return_value = {"id": "2", "nome": "Novo Usuario"}
 
     novo_usuario = criar_usuario_servico("Novo Usuario", "Gerador", "Recife", "novo@email.com", "senhaforte")
@@ -82,9 +73,6 @@ def test_criar_usuario_servico_sucesso(mock_obter_por_email, mock_salvar_novo_us
 
 @patch('servicos.obter_usuario_por_email')
 def test_criar_usuario_servico_falha_email_existente(mock_obter_por_email):
-    """
-    Testa se a criação de usuário falha quando o e-mail já existe.
-    """
     mock_obter_por_email.return_value = MOCK_USUARIOS["1"]
 
     with pytest.raises(ValueError) as excinfo:
@@ -94,9 +82,6 @@ def test_criar_usuario_servico_falha_email_existente(mock_obter_por_email):
 
 @patch('servicos.load_data')
 def test_transacao_compra_servico_falha_quantidade_insuficiente(mock_load_data):
-    """
-    Testa se a transação de compra falha ao solicitar uma quantidade maior que a disponível.
-    """
     mock_load_data.return_value = {
         "1": { "id": "1", "quantidade": "5.0", "status": "Ativa" }
     }
@@ -109,9 +94,6 @@ def test_transacao_compra_servico_falha_quantidade_insuficiente(mock_load_data):
 @patch('servicos.save_data')
 @patch('servicos.load_data')
 def test_editar_oferta_sucesso(mock_load_data, mock_save_data):
-    """
-    Testa se um usuário consegue editar sua própria oferta com sucesso.
-    """
     oferta_original = {
         "1": {"id": "1", "gerador_id": "2", "titulo": "Tomates", "descricao": "Tomates frescos.", "status": "Ativa"}
     }
@@ -127,9 +109,6 @@ def test_editar_oferta_sucesso(mock_load_data, mock_save_data):
 
 @patch('servicos.load_data')
 def test_editar_oferta_falha_sem_permissao(mock_load_data):
-    """
-    Testa se a edição falha quando um usuário tenta editar uma oferta que não é sua.
-    """
     mock_load_data.return_value = {
         "1": {"id": "1", "gerador_id": "2", "titulo": "Tomates"}
     }
@@ -143,7 +122,6 @@ def test_editar_oferta_falha_sem_permissao(mock_load_data):
 @patch('servicos.save_data')
 @patch('servicos.load_data')
 def test_deletar_oferta_sucesso_sem_historico(mock_load_data, mock_save_data):
-    """Testa se uma oferta sem histórico é excluída permanentemente."""
     mock_load_data.return_value = {
         "1": {"id": "1", "gerador_id": "2"}
     }
@@ -155,7 +133,6 @@ def test_deletar_oferta_sucesso_sem_historico(mock_load_data, mock_save_data):
 @patch('servicos.save_data')
 @patch('servicos.load_data')
 def test_deletar_oferta_sucesso_com_historico(mock_load_data, mock_save_data):
-    """Testa se uma oferta com histórico é marcada como 'Removida'."""
     mock_load_data.return_value = {
         "1": {"id": "1", "gerador_id": "2", "historico_compras": [{"id": "compra1"}]}
     }
@@ -168,7 +145,6 @@ def test_deletar_oferta_sucesso_com_historico(mock_load_data, mock_save_data):
 
 @patch('servicos.load_data')
 def test_deletar_oferta_falha_sem_permissao(mock_load_data):
-    """Testa se a exclusão falha quando o usuário não é o dono da oferta."""
     mock_load_data.return_value = {
         "1": {"id": "1", "gerador_id": "2"}
     }
@@ -180,7 +156,6 @@ def test_deletar_oferta_falha_sem_permissao(mock_load_data):
 
 @patch('servicos.load_data')
 def test_obter_historico_transacoes_para_gerador(mock_load_data):
-    """Testa se o histórico de um Gerador é retornado corretamente."""
     def side_effect(file_path):
         if 'usuarios' in file_path:
             return MOCK_USUARIOS
@@ -194,12 +169,11 @@ def test_obter_historico_transacoes_para_gerador(mock_load_data):
     assert len(historico) == 1
     transacao = historico[0]
     assert transacao['tipo'] == 'Venda'
-    assert transacao['parceiro'] == 'Usuario Receptor' # Nome do comprador
+    assert transacao['parceiro'] == 'Usuario Receptor'
     assert transacao['titulo'] == 'Tomates'
 
 @patch('servicos.load_data')
 def test_obter_historico_transacoes_para_receptor(mock_load_data):
-    """Testa se o histórico de um Receptor é retornado corretamente."""
     def side_effect(file_path):
         if 'usuarios' in file_path:
             return MOCK_USUARIOS
@@ -213,5 +187,5 @@ def test_obter_historico_transacoes_para_receptor(mock_load_data):
     assert len(historico) == 1
     transacao = historico[0]
     assert transacao['tipo'] == 'Compra'
-    assert transacao['parceiro'] == 'Usuario Gerador' # Nome do vendedor
+    assert transacao['parceiro'] == 'Usuario Gerador'
     assert transacao['titulo'] == 'Tomates'

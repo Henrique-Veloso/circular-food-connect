@@ -8,7 +8,6 @@ from app import app as flask_app
 
 @pytest.fixture
 def app():
-    """Cria e configura uma nova instância do app para cada teste."""
     flask_app.config.update({
         "TESTING": True,
     })
@@ -16,22 +15,15 @@ def app():
 
 @pytest.fixture
 def client(app):
-    """Um cliente de teste para o app."""
     return app.test_client()
 
 def test_index_page(client):
-    """
-    Testa se a página inicial (/) carrega corretamente.
-    """
     response = client.get('/')
     assert response.status_code == 200
     assert b"Circular Food Conect" in response.data
 
 @patch('app.autenticar_usuario')
 def test_login_sucesso(mock_autenticar_usuario, client):
-    """
-    Testa o fluxo de login com sucesso via POST para /api/login.
-    """
     mock_autenticar_usuario.return_value = {
         "id": "1",
         "nome": "Usuario Teste",
@@ -54,9 +46,6 @@ def test_login_sucesso(mock_autenticar_usuario, client):
 
 @patch('app.autenticar_usuario')
 def test_login_falha(mock_autenticar_usuario, client):
-    """
-    Testa o fluxo de login com falha via POST para /api/login.
-    """
     mock_autenticar_usuario.return_value = None
 
     response = client.post('/api/login', data={
@@ -68,18 +57,12 @@ def test_login_falha(mock_autenticar_usuario, client):
     assert b"E-mail ou senha inv\xc3\xa1lidos." in response.data
 
 def test_cadastro_oferta_page_sem_login(client):
-    """
-    Testa se um usu\xc3\xa1rio n\xc3\xa3o logado \xc3\xa9 redirecionado da p\xc3\xa1gina de cadastro de oferta.
-    """
     response = client.get('/ofertas/cadastro')
-    assert response.status_code == 302  # Redirecionamento
+    assert response.status_code == 302
     assert response.location == '/login?erro=Acesso+restrito.'
 
 @patch('app.criar_usuario_servico')
 def test_cadastro_usuario_sucesso(mock_criar_usuario, client):
-    """
-    Testa o fluxo de cadastro de usu\xc3\xa1rio com sucesso.
-    """
     response = client.post('/api/cadastro_usuario', data={
         'nome': 'Novo Usu\xc3\xa1rio',
         'email': 'novo@email.com',
@@ -95,9 +78,6 @@ def test_cadastro_usuario_sucesso(mock_criar_usuario, client):
 @patch('app.render_template')
 @patch('app.criar_usuario_servico')
 def test_cadastro_usuario_falha_email_existente(mock_criar_usuario, mock_render_template, client):
-    """
-    Testa a falha no cadastro de usu\xc3\xa1rio quando o e-mail j\xc3\xa1 existe.
-    """
     error_message = "Este E-mail j\xc3\xa1 est\xc3\xa1 cadastrado."
     mock_criar_usuario.side_effect = ValueError(error_message)
 
@@ -115,9 +95,6 @@ def test_cadastro_usuario_falha_email_existente(mock_criar_usuario, mock_render_
 
 @patch('app.criar_oferta_servico')
 def test_cadastro_oferta_sucesso_com_login(mock_criar_oferta, client):
-    """
-    Testa o cadastro de uma nova oferta por um usuário 'Gerador' logado.
-    """
     with client.session_transaction() as sess:
         sess['usuario_ativo'] = {
             "id": "2", "nome": "Usuario Gerador", "tipo": "Gerador"
@@ -137,9 +114,6 @@ def test_cadastro_oferta_sucesso_com_login(mock_criar_oferta, client):
 
 @patch('app.transacao_compra_servico')
 def test_compra_oferta_sucesso(mock_transacao, client):
-    """
-    Testa a compra de uma oferta por um usuário 'Receptor' logado.
-    """
     with client.session_transaction() as sess:
         sess['usuario_ativo'] = {
             "id": "1", "nome": "Usuario Receptor", "tipo": "Receptor"
@@ -154,9 +128,6 @@ def test_compra_oferta_sucesso(mock_transacao, client):
     assert 'sucesso=Compra+de+2.0+Kg+realizada+com+sucesso' in response.location
 
 def test_compra_oferta_falha_perfil_invalido(client):
-    """
-    Testa se um usuário 'Gerador' é impedido de comprar uma oferta.
-    """
     with client.session_transaction() as sess:
         sess['usuario_ativo'] = {
             "id": "2", "nome": "Usuario Gerador", "tipo": "Gerador"
@@ -169,9 +140,6 @@ def test_compra_oferta_falha_perfil_invalido(client):
 
 @patch('app.obter_historico_transacoes')
 def test_historico_page_com_login(mock_obter_historico, client):
-    """
-    Testa se a página de histórico é carregada para um usuário logado.
-    """
     with client.session_transaction() as sess:
         sess['usuario_ativo'] = {"id": "1", "nome": "Usuario Teste", "tipo": "Receptor"}
 

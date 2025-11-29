@@ -40,7 +40,7 @@ def index():
 def login_page():
     sucesso = request.args.get('sucesso')
     erro = request.args.get('erro')
-    action = request.args.get('action') 
+    action = request.args.get('action')
     return render_template('loginUsuario.html', sucesso=sucesso, erro=erro, action=action)
 
 @app.route('/cadastro', methods=['GET'])
@@ -104,7 +104,7 @@ def api_login():
     if usuario:
         session['usuario_ativo'] = usuario
         return redirect(url_for('listagem_ofertas_page', login_success='true', user_id=usuario['id'])) 
-    else:
+    else: 
         return render_template('loginUsuario.html', erro="E-mail ou senha inválidos. Tente novamente.")
     
 @app.route('/api/logout', methods=['GET'])
@@ -120,7 +120,7 @@ def api_cadastro_usuario():
         senha = request.form['senha']
         tipo = request.form['tipo']
         cidade = request.form['cidade']
-        criar_usuario_servico(nome, tipo, cidade, email, senha) 
+        criar_usuario_servico(nome, tipo, cidade, email, senha)
         return redirect(url_for('login_page', sucesso="Cadastro realizado com sucesso! Faça seu login."))
     except ValueError as e:
         return render_template('cadastrarUsuario.html', erro=f"Erro no cadastro: {str(e)}")
@@ -136,7 +136,7 @@ def api_cadastro_oferta():
     caminhos_imagens = []
     files = request.files.getlist('imagens')
     for i, file in enumerate(files):
-        if i >= 3: 
+        if i >= 3:
             break
         if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)

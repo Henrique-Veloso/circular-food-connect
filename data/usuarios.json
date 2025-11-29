@@ -18,5 +18,15 @@
         "reputacao": 0.0,
         "ofertas_ativas": 0,
         "id": "2"
+    },
+    "3": {
+        "nome": "Erick",
+        "email": "erick@hotmail.com",
+        "senha": "teste",
+        "tipo": "Gerador",
+        "localizacao": "Recife",
+        "reputacao": 0.0,
+        "ofertas_ativas": 0,
+        "id": "3"
     }
 }
